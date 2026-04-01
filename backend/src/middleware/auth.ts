@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET!;
+function getSecret(): string {
+  return process.env.JWT_SECRET!;
+}
 
 export interface JwtPayload {
   adminId: number;
