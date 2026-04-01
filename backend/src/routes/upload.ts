@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import multer from "multer";
-import { supabase } from "../supabaseClient";
+import { getSupabase } from "../supabaseClient";
 import { requireAdmin } from "../middleware/auth";
 
 const router = Router();
