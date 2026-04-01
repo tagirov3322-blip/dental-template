@@ -82,7 +82,12 @@ function ImageRow({ images, direction }: { images: string[]; direction: "left" |
 
 export default function About() {
   return (
-    <section id="about" className="relative overflow-hidden bg-gray-900 py-32 sm:py-40 md:py-48">
+    <section id="about" className="relative overflow-hidden bg-gray-900 py-40 sm:py-48 md:py-56 -mt-20">
+
+      {/* Gradient fade top — white to dark */}
+      <div className="absolute top-0 left-0 right-0 h-32 sm:h-40 z-20 bg-gradient-to-b from-white via-white/60 to-transparent pointer-events-none" />
+      {/* Gradient fade bottom — dark to white */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 sm:h-40 z-20 bg-gradient-to-t from-[var(--muted)] via-[var(--muted)]/60 to-transparent pointer-events-none" />
 
       {/* Background image rows — stretch to fill entire section */}
       <div className="absolute inset-0 flex flex-col justify-center gap-3 opacity-40">
