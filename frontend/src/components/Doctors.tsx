@@ -158,7 +158,7 @@ function DoctorModal({ doctor, onClose }: { doctor: Doctor; onClose: () => void 
             <X className="h-5 w-5" />
           </button>
 
-          <div className="flex flex-col sm:flex-row">
+          <div className="flex flex-col sm:flex-row overflow-hidden rounded-3xl">
             {/* Photo */}
             <div className="relative sm:w-2/5 shrink-0">
               <div style={{ aspectRatio: "3/4" }}>
