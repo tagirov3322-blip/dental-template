@@ -98,7 +98,7 @@ export default function Services() {
         </div>
 
         {/* Price list */}
-        <div className="rounded-2xl border border-[var(--border)] bg-white overflow-hidden text-[120%]">
+        <div className="rounded-2xl border border-[var(--border)] bg-white overflow-hidden">
           {filtered.map((service, idx) => {
             const isExpanded = expandedId === service.id;
             const isLast = idx === filtered.length - 1;
@@ -109,31 +109,31 @@ export default function Services() {
                 <button
                   onClick={() => toggleExpand(service.id)}
                   className={cn(
-                    "flex w-full items-center gap-4 px-6 py-5 text-left transition-colors duration-150",
+                    "flex w-full items-center gap-6 px-8 py-6 text-left transition-colors duration-150",
                     "hover:bg-[var(--muted)]",
                     isExpanded && "bg-[var(--muted)]"
                   )}
                 >
                   {/* Name */}
-                  <span className="flex-1 text-[15px] font-medium text-[var(--foreground)]">
+                  <span className="flex-1 text-lg font-medium text-[var(--foreground)]">
                     {service.name}
                   </span>
 
                   {/* Duration */}
-                  <span className="hidden sm:flex items-center gap-1 text-xs text-[var(--muted-foreground)] shrink-0">
-                    <Clock className="h-3 w-3" />
+                  <span className="hidden sm:flex items-center gap-1.5 text-sm text-[var(--muted-foreground)] shrink-0">
+                    <Clock className="h-4 w-4" />
                     {service.duration}
                   </span>
 
                   {/* Price */}
-                  <span className="font-[var(--font-mono)] text-sm font-semibold text-[var(--foreground)] shrink-0 w-28 text-right">
+                  <span className="font-[var(--font-mono)] text-base font-bold text-[var(--foreground)] shrink-0 w-36 text-right">
                     {service.price}
                   </span>
 
                   {/* Chevron */}
                   <ChevronDown
                     className={cn(
-                      "h-4 w-4 shrink-0 text-[var(--muted-foreground)] transition-transform duration-300",
+                      "h-5 w-5 shrink-0 text-[var(--muted-foreground)] transition-transform duration-300",
                       isExpanded && "rotate-180"
                     )}
                   />
