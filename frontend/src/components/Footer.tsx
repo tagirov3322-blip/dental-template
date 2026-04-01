@@ -70,12 +70,12 @@ export default function Footer() {
   return (
     <footer
       id="contacts"
-      className="relative w-full max-w-6xl mx-auto flex flex-col items-center justify-center rounded-t-3xl md:rounded-t-[2.5rem] border-t border-white/10 bg-[#0a0f1a] bg-[radial-gradient(35%_128px_at_50%_0%,rgba(255,255,255,0.06),transparent)] px-6 py-12 lg:py-16"
+      className="relative w-full border-t border-white/10 bg-[#0a0f1a] bg-[radial-gradient(35%_128px_at_50%_0%,rgba(255,255,255,0.06),transparent)] px-6 py-12 lg:py-16"
     >
       {/* Top glow line */}
       <div className="absolute top-0 right-1/2 left-1/2 h-px w-1/3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/20 blur-sm" />
 
-      <div className="grid w-full gap-8 xl:grid-cols-3 xl:gap-8">
+      <div className="mx-auto max-w-7xl w-full grid gap-8 xl:grid-cols-3 xl:gap-8">
         {/* Logo + info */}
         <div className="space-y-4">
           <Link href="/" className="flex items-center gap-3">
@@ -139,7 +139,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom legal line */}
-      <div className="mt-12 w-full border-t border-white/5 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600 font-[var(--font-mono)]">
+      <div className="mx-auto max-w-7xl mt-12 w-full border-t border-white/5 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600 font-[var(--font-mono)]">
         <span>ООО «Айкьюдентал», Лицензия № Л041-01181-16/00361643</span>
         <span>Сайт не является публичной офертой</span>
       </div>
