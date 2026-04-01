@@ -6,21 +6,35 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  schemas  = ["iq"]
+}
+
+model Admin {
+  id           Int      @id @default(autoincrement())
+  login        String   @unique
+  passwordHash String
+  role         String   @default("admin")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@schema("iq")
 }
 
 model Doctor {
-  id          Int              @id @default(autoincrement())
+  id          Int             @id @default(autoincrement())
   name        String
   specialty   String
-  experience  Int              @default(0)
+  experience  Int             @default(0)
   photo       String?
   description String?
-  isActive    Boolean          @default(true)
+  isActive    Boolean         @default(true)
   schedule    Json?
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
   bookings    Booking[]
   portfolio   PortfolioWork[]
+
+  @@schema("iq")
 }
 
 model Service {
@@ -34,6 +48,8 @@ model Service {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   bookings    Booking[]
+
+  @@schema("iq")
 }
 
 model Booking {
@@ -48,8 +64,40 @@ model Booking {
   doctor      Doctor   @relation(fields: [doctorId], references: [id])
   serviceId   Int
   service     Service  @relation(fields: [serviceId], references: [id])
+  smsSent     Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@schema("iq")
+}
+
+model Review {
+  id         Int      @id @default(autoincrement())
+  authorName String
+  text       String
+  rating     Int
+  source     String   @default("site")
+  sourceId   String?  @unique
+  isApproved Boolean  @default(false)
+  isVisible  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@schema("iq")
+}
+
+model Promotion {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  image       String?
+  isActive    Boolean   @default(true)
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@schema("iq")
 }
 
 model PortfolioWork {
@@ -62,4 +110,19 @@ model PortfolioWork {
   doctorId    Int
   doctor      Doctor   @relation(fields: [doctorId], references: [id])
   createdAt   DateTime @default(now())
+
+  @@schema("iq")
+}
+
+model Settings {
+  id              Int    @id @default(1)
+  clinicName      String @default("IQ Dental")
+  phone           String @default("")
+  address         String @default("")
+  workingHours    Json?
+  telegramChatId  String @default("")
+  smsEnabled      Boolean @default(false)
+  updatedAt       DateTime @updatedAt
+
+  @@schema("iq")
 }
