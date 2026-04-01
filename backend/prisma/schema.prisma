@@ -1,0 +1,65 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Doctor {
+  id          Int              @id @default(autoincrement())
+  name        String
+  specialty   String
+  experience  Int              @default(0)
+  photo       String?
+  description String?
+  isActive    Boolean          @default(true)
+  schedule    Json?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  bookings    Booking[]
+  portfolio   PortfolioWork[]
+}
+
+model Service {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  price       Int
+  duration    Int       @default(30)
+  category    String?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  bookings    Booking[]
+}
+
+model Booking {
+  id          Int      @id @default(autoincrement())
+  patientName String
+  phone       String
+  date        DateTime
+  time        String
+  comment     String?
+  status      String   @default("new")
+  doctorId    Int
+  doctor      Doctor   @relation(fields: [doctorId], references: [id])
+  serviceId   Int
+  service     Service  @relation(fields: [serviceId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model PortfolioWork {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  beforePhoto String?
+  afterPhoto  String?
+  category    String?
+  doctorId    Int
+  doctor      Doctor   @relation(fields: [doctorId], references: [id])
+  createdAt   DateTime @default(now())
+}
