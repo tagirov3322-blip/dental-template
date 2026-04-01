@@ -1,13 +1,19 @@
 import { Router, Request, Response } from "express";
 import prisma from "../prismaClient";
 import { requireAdmin } from "../middleware/auth";
+import { validate } from "../middleware/validate";
+import { createDoctorSchema, updateDoctorSchema } from "../lib/validators";
+import { sanitizeObject } from "../lib/sanitize";
 
 const router = Router();
 
 // GET /api/doctors — публичный
-router.get("/", async (_req: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
+  const { active } = req.query;
+  const where = active === "false" ? {} : { isActive: true };
+
   const doctors = await prisma.doctor.findMany({
-    where: { isActive: true },
+    where,
     orderBy: { name: "asc" },
   });
   res.json(doctors);
@@ -26,16 +32,18 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
 });
 
 // POST /api/doctors — admin
-router.post("/", requireAdmin, async (req: Request, res: Response) => {
-  const doctor = await prisma.doctor.create({ data: req.body });
+router.post("/", requireAdmin, validate(createDoctorSchema), async (req: Request, res: Response) => {
+  const data = sanitizeObject(req.body);
+  const doctor = await prisma.doctor.create({ data });
   res.status(201).json(doctor);
 });
 
 // PUT /api/doctors/:id — admin
-router.put("/:id", requireAdmin, async (req: Request, res: Response) => {
+router.put("/:id", requireAdmin, validate(updateDoctorSchema), async (req: Request, res: Response) => {
+  const data = sanitizeObject(req.body);
   const doctor = await prisma.doctor.update({
     where: { id: Number(req.params.id) },
-    data: req.body,
+    data,
   });
   res.json(doctor);
 });
