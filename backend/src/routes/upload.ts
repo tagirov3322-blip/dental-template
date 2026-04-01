@@ -25,7 +25,7 @@ router.post("/", requireAdmin, upload.single("file"), async (req: Request, res: 
     return;
   }
 
-  const { data } = supabase.storage.from("photos").getPublicUrl(fileName);
+  const { data } = getSupabase().storage.from("photos").getPublicUrl(fileName);
   res.json({ url: data.publicUrl });
 });
 
