@@ -1,11 +1,5 @@
 "use client";
 
-import { useRef, useEffect } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
-
 // Fewer photos per row, more breathing room
 const row1 = [
   "https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=500&h=350&fit=crop",
@@ -35,47 +29,30 @@ const row3 = [
   "https://images.unsplash.com/photo-1571772996211-2f02c9727629?w=500&h=350&fit=crop",
 ];
 
-function ImageRow({ images, direction }: { images: string[]; direction: "left" | "right" }) {
-  const rowRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = rowRef.current;
-    if (!el) return;
-
-    const distance = direction === "right" ? 250 : -250;
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        el,
-        { x: -distance },
-        {
-          x: distance,
-          ease: "none",
-          scrollTrigger: {
-            trigger: el.parentElement!.parentElement!,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1.5,
-          },
-        }
-      );
-    });
-
-    return () => ctx.revert();
-  }, [direction]);
+function ImageRow({ images, direction, duration = 40 }: { images: string[]; direction: "left" | "right"; duration?: number }) {
+  // Double the images for seamless infinite loop
+  const doubled = [...images, ...images];
 
   return (
-    <div ref={rowRef} className="flex gap-3 will-change-transform" style={{ width: "max-content" }}>
-      {images.map((src, i) => (
-        <div key={i} className="h-[180px] w-[270px] flex-shrink-0 overflow-hidden rounded-xl sm:h-[200px] sm:w-[300px]">
-          <img
-            src={src}
-            alt=""
-            loading="lazy"
-            className="h-full w-full object-cover"
-          />
-        </div>
-      ))}
+    <div className="overflow-hidden">
+      <div
+        className="flex gap-3 will-change-transform"
+        style={{
+          width: "max-content",
+          animation: `${direction === "left" ? "marquee-left" : "marquee-right"} ${duration}s linear infinite`,
+        }}
+      >
+        {doubled.map((src, i) => (
+          <div key={i} className="h-[180px] w-[270px] flex-shrink-0 overflow-hidden rounded-xl sm:h-[200px] sm:w-[300px]">
+            <img
+              src={src}
+              alt=""
+              loading="lazy"
+              className="h-full w-full object-cover"
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -85,10 +62,10 @@ export default function About() {
     <section id="about" className="relative overflow-hidden bg-gray-900 py-52 sm:py-60 md:py-72">
 
       {/* Background image rows */}
-      <div className="absolute inset-0 flex flex-col justify-center gap-5 opacity-50">
-        <ImageRow images={row1} direction="right" />
-        <ImageRow images={row2} direction="left" />
-        <ImageRow images={row3} direction="right" />
+      <div className="absolute inset-0 flex flex-col justify-center gap-3 opacity-50">
+        <ImageRow images={row1} direction="left" duration={45} />
+        <ImageRow images={row2} direction="right" duration={50} />
+        <ImageRow images={row3} direction="left" duration={42} />
       </div>
 
       {/* Subtle dark overlay */}
