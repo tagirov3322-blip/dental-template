@@ -4,14 +4,13 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { Gift, Percent, Star, Users, CreditCard, Clock, Tag } from "lucide-react";
+import { Clock, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const promotions = [
   {
-    icon: Gift,
     title: "Бесплатная консультация",
     description:
       "Первичный осмотр, диагностика и составление плана лечения — совершенно бесплатно для всех новых пациентов клиники.",
@@ -20,7 +19,6 @@ const promotions = [
     isHit: false,
   },
   {
-    icon: Percent,
     title: "Профессиональная чистка -20%",
     description:
       "Скидка 20% на комплексную профессиональную гигиену полости рта: ультразвук, Air-Flow, полировка и фторирование.",
@@ -29,7 +27,6 @@ const promotions = [
     isHit: true,
   },
   {
-    icon: Star,
     title: "Имплантация под ключ",
     description:
       "Полный цикл имплантации: установка импланта, формирователь десны и металлокерамическая коронка по фиксированной цене.",
@@ -39,7 +36,6 @@ const promotions = [
     isHit: false,
   },
   {
-    icon: Users,
     title: "Семейная скидка",
     description:
       "Приходите всей семьёй и получайте скидку 10% на все виды лечения при одновременном обращении от двух членов семьи.",
@@ -49,7 +45,6 @@ const promotions = [
     isHit: false,
   },
   {
-    icon: CreditCard,
     title: "Рассрочка 0%",
     description:
       "Оформите беспроцентную рассрочку на срок до 12 месяцев на все виды стоматологического лечения от 10 000 ₽.",
@@ -93,7 +88,6 @@ export default function Promotions() {
         {/* Promo cards — full-width horizontal layout */}
         <div className="group-hover-dim flex flex-col gap-4">
           {promotions.map((promo, index) => {
-            const Icon = promo.icon;
             const isEven = index % 2 === 0;
 
             return (
@@ -117,11 +111,8 @@ export default function Promotions() {
                   </span>
                 )}
 
-                {/* Left side: icon + text */}
-                <div className="flex items-start gap-5 md:flex-1">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                    <Icon className="h-6 w-6" />
-                  </div>
+                {/* Left side: text */}
+                <div className="flex items-start md:flex-1">
                   <div className="min-w-0">
                     <h3 className="font-[var(--font-heading)] text-fluid-h3 text-foreground">
                       {promo.title}

@@ -1,68 +1,141 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useCallback, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const photos = [
-  { label: "Ресепшен", color: "from-blue-400 to-blue-600" },
-  { label: "Кабинет терапии", color: "from-sky-400 to-indigo-500" },
-  { label: "Панорамный снимок", color: "from-indigo-400 to-purple-500" },
-  { label: "Зона ожидания", color: "from-cyan-400 to-blue-500" },
-  { label: "Хирургический кабинет", color: "from-blue-500 to-indigo-600" },
-  { label: "Стерилизация", color: "from-violet-400 to-blue-600" },
-  { label: "Детский кабинет", color: "from-sky-300 to-blue-500" },
-  { label: "Оборудование", color: "from-blue-600 to-indigo-700" },
+  { label: "Ресепшен", img: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=600&h=450&fit=crop" },
+  { label: "Кабинет терапии", img: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=600&h=800&fit=crop" },
+  { label: "Панорамный снимок", img: "https://images.unsplash.com/photo-1606811971618-4486d14f3f99?w=600&h=450&fit=crop" },
+  { label: "Зона ожидания", img: "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=600&h=450&fit=crop" },
+  { label: "Хирургический кабинет", img: "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=600&h=800&fit=crop" },
+  { label: "Стерилизация", img: "https://images.unsplash.com/photo-1598256989800-fe5f95da9787?w=600&h=450&fit=crop" },
+  { label: "Современное оборудование", img: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=600&h=450&fit=crop" },
+  { label: "Улыбка пациента", img: "https://images.unsplash.com/photo-1606265752439-1f18756aa5fc?w=600&h=800&fit=crop" },
+  { label: "Фасад клиники", img: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=600&h=450&fit=crop" },
+];
+
+// Grid positions: 3 rows x 3 cols, all 9 slots filled
+const gridPositions = [
+  "col-start-1 row-start-1",
+  "col-start-2 row-start-1",
+  "col-start-3 row-start-1",
+  "col-start-1 row-start-2",
+  "col-start-2 row-start-2", // center
+  "col-start-3 row-start-2",
+  "col-start-1 row-start-3",
+  "col-start-2 row-start-3",
+  "col-start-3 row-start-3", // bottom-right — was missing
+];
+
+// Scattered positions: chaotic spread across the entire section
+const scatteredState = [
+  { x: -350, y: -200, r: -25 },
+  { x: 60,   y: -260, r: 18 },
+  { x: 380,  y: -180, r: 30 },
+  { x: -420, y: 30,   r: -35 },
+  { x: 0,    y: 0,    r: 20 },
+  { x: 400,  y: -20,  r: -22 },
+  { x: -300, y: 220,  r: 28 },
+  { x: 80,   y: 280,  r: -15 },
+  { x: 360,  y: 200,  r: -32 },
 ];
 
 export default function About() {
-  const gridRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const mouse = useRef({ x: 0, y: 0 });
+  const current = useRef({ x: 0, y: 0 });
+  const rafId = useRef<number>(0);
 
+  // Smooth 3D tilt on entire grid following mouse
   useEffect(() => {
-    const grid = gridRef.current;
+    const loop = () => {
+      current.current.x += (mouse.current.x - current.current.x) * 0.06;
+      current.current.y += (mouse.current.y - current.current.y) * 0.06;
+
+      if (gridRef.current) {
+        gridRef.current.style.transform = `
+          rotateX(${current.current.y}deg)
+          rotateY(${current.current.x}deg)
+        `;
+      }
+      rafId.current = requestAnimationFrame(loop);
+    };
+    rafId.current = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(rafId.current);
+  }, []);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    const rect = el.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    mouse.current.x = x * 16;
+    mouse.current.y = y * -12;
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    mouse.current.x = 0;
+    mouse.current.y = 0;
+  }, []);
+
+  // Scroll animation: scattered → assembled → scattered
+  useEffect(() => {
     const section = sectionRef.current;
-    if (!grid || !section) return;
+    const grid = gridRef.current;
+    if (!section || !grid) return;
+
+    const cards = grid.querySelectorAll<HTMLElement>("[data-card]");
 
     const ctx = gsap.context(() => {
-      // Animate the grid's 3D rotation and vertical position on scroll
-      gsap.fromTo(
-        grid,
-        {
-          rotateX: 55,
-          rotateZ: -12,
-          translateY: "15%",
-          scale: 0.85,
-        },
-        {
+      // Phase 1: start scattered, assemble to grid on scroll in
+      cards.forEach((card, i) => {
+        const s = scatteredState[i];
+        // Set initial scattered state
+        gsap.set(card, {
+          x: s.x, y: s.y, rotation: s.r, scale: 0.75,
+          rotateX: s.r * 1.5, rotateY: s.x * 0.05,
+          transformPerspective: 800,
+        });
+
+        // Animate to assembled (0,0) — long scrub range for smooth feel
+        gsap.to(card, {
+          x: 0,
+          y: 0,
+          rotation: 0,
           rotateX: 0,
-          rotateZ: 0,
-          translateY: "-10%",
+          rotateY: 0,
           scale: 1,
           ease: "none",
           scrollTrigger: {
             trigger: section,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1,
+            start: "top 90%",
+            end: "center center",
+            scrub: 2,
           },
-        }
-      );
+        });
+      });
 
-      // Parallax individual cards at different speeds
-      const cards = grid.querySelectorAll("[data-photo]");
+      // Phase 2: after assembled, scatter again as section leaves
       cards.forEach((card, i) => {
-        const speed = (i % 3 === 0) ? -40 : (i % 3 === 1) ? -20 : -60;
+        const s = scatteredState[i];
         gsap.to(card, {
-          y: speed,
+          x: -s.x * 0.8,
+          y: s.y * 0.9,
+          rotation: -s.r * 0.7,
+          rotateX: -s.r * 1.2,
+          rotateY: -s.x * 0.04,
+          scale: 0.75,
           ease: "none",
           scrollTrigger: {
             trigger: section,
-            start: "top bottom",
+            start: "center 30%",
             end: "bottom top",
-            scrub: 1,
+            scrub: 2,
           },
         });
       });
@@ -72,11 +145,11 @@ export default function About() {
   }, []);
 
   return (
-    <section id="about" ref={sectionRef} className="bg-white py-24 md:py-32 overflow-hidden">
+    <section id="about" ref={sectionRef} className="bg-white py-32 md:py-44 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-        {/* Text section */}
-        <div className="mx-auto max-w-2xl text-center mb-16 lg:mb-20">
+        {/* Text — above cards layer */}
+        <div className="relative z-10 mx-auto max-w-2xl text-center mb-20 lg:mb-28">
           <p className="font-[var(--font-mono)] text-xs font-semibold uppercase tracking-widest text-blue-600">
             О клинике
           </p>
@@ -85,7 +158,7 @@ export default function About() {
             <br className="hidden sm:block" />
             {" "}в&nbsp;центре города
           </h2>
-          <div className="mt-6 space-y-4 text-base leading-relaxed text-gray-600 sm:text-lg">
+          <div className="mt-6 space-y-4 text-base leading-relaxed text-gray-600 sm:text-lg max-w-xl mx-auto">
             <p>
               Клиника{" "}
               <span className="font-semibold text-gray-900">IQ&nbsp;Dental</span>{" "}
@@ -94,54 +167,56 @@ export default function About() {
               Мы создали пространство, где передовые технологии сочетаются
               с&nbsp;комфортной атмосферой.
             </p>
-            <p>
-              Каждый кабинет оснащён новейшим оборудованием для точной
-              диагностики и&nbsp;безболезненного лечения. Наша команда
-              профессионалов заботится о&nbsp;здоровье вашей улыбки, используя
-              только проверенные материалы и&nbsp;современные методики.
-            </p>
           </div>
         </div>
 
-        {/* 3D Isometric Photo Grid */}
-        <div className="relative" style={{ perspective: "1200px" }}>
+        {/* 3D Grid with mouse tilt + scroll scatter/assemble */}
+        <div className="relative overflow-hidden rounded-3xl py-16 sm:py-20">
+        <div
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          className="relative mx-auto max-w-6xl"
+          style={{ perspective: "1200px" }}
+        >
           <div
             ref={gridRef}
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5"
+            className="grid grid-cols-3 gap-3 sm:gap-4"
             style={{
               transformStyle: "preserve-3d",
               willChange: "transform",
+              gridTemplateRows: "200px 200px 200px",
             }}
           >
             {photos.map((photo, idx) => (
               <div
                 key={idx}
-                data-photo
-                className="group relative overflow-hidden rounded-2xl"
-                style={{
-                  aspectRatio: idx % 3 === 0 ? "3/4" : "4/3",
-                  transformStyle: "preserve-3d",
-                }}
+                data-card
+                className={`${gridPositions[idx]} will-change-transform`}
               >
-                {/* Gradient placeholder */}
-                <div
-                  className={`absolute inset-0 bg-gradient-to-br ${photo.color} transition-transform duration-700 ease-out group-hover:scale-110`}
-                />
+                <div className="group relative h-full w-full overflow-hidden rounded-2xl cursor-pointer">
+                  <img
+                    src={photo.img}
+                    alt={photo.label}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                  />
 
-                {/* Label overlay */}
-                <div className="absolute inset-0 flex items-end p-4 sm:p-5">
-                  <div className="translate-y-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                    <span className="inline-block rounded-lg bg-white/90 backdrop-blur-sm px-3 py-1.5 text-xs font-semibold text-gray-900 shadow-lg">
-                      {photo.label}
-                    </span>
+                  {/* Dark overlay on hover */}
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+                  {/* Label */}
+                  <div className="absolute inset-0 flex items-end p-4">
+                    <div className="translate-y-4 opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+                      <span className="inline-block rounded-lg bg-white/90 backdrop-blur-sm px-3 py-1.5 text-xs font-semibold text-gray-900 shadow-lg">
+                        {photo.label}
+                      </span>
+                    </div>
                   </div>
                 </div>
-
-                {/* Shine effect on hover */}
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               </div>
             ))}
           </div>
+        </div>
         </div>
       </div>
     </section>
