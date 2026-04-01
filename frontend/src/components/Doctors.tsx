@@ -2,11 +2,7 @@
 
 import { useRef, useCallback } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
 import { cn } from "@/lib/utils";
-
-gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const doctors = [
   {
@@ -157,52 +153,21 @@ function DoctorCard({ doctor }: { doctor: (typeof doctors)[number] }) {
 }
 
 export default function Doctors() {
-  const containerRef = useRef<HTMLElement>(null);
-
-  useGSAP(
-    () => {
-      gsap.from("[data-animate='doc-label']", {
-        opacity: 0,
-        y: 20,
-        duration: 0.5,
-        scrollTrigger: {
-          trigger: "[data-animate='doc-label']",
-          start: "top 85%",
-          once: true,
-        },
-      });
-
-      gsap.from("[data-animate='doc-heading']", {
-        opacity: 0,
-        y: 30,
-        duration: 0.6,
-        delay: 0.1,
-        scrollTrigger: {
-          trigger: "[data-animate='doc-heading']",
-          start: "top 85%",
-          once: true,
-        },
-      });
-    },
-    { scope: containerRef }
-  );
-
   return (
     <section
       id="doctors"
-      ref={containerRef}
       className="py-[var(--space-section)] bg-[var(--background)]"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Section label */}
-        <div data-animate="doc-label" className="mb-3">
+        <div className="mb-3">
           <span className="font-[var(--font-mono)] text-xs uppercase tracking-[0.2em] text-muted-foreground">
             Команда
           </span>
         </div>
 
         {/* Heading */}
-        <div data-animate="doc-heading" className="mb-[var(--space-lg)]">
+        <div className="mb-[var(--space-lg)]">
           <h2 className="text-fluid-h1 font-[var(--font-heading)] text-foreground">
             Наши специалисты
           </h2>

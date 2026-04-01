@@ -62,35 +62,6 @@ const promotions = [
 export default function Promotions() {
   const containerRef = useRef<HTMLElement>(null);
 
-  useGSAP(
-    () => {
-      gsap.from("[data-animate='promo-heading']", {
-        opacity: 0,
-        y: 30,
-        duration: 0.6,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: "[data-animate='promo-heading']",
-          start: "top 80%",
-          once: true,
-        },
-      });
-
-      gsap.from("[data-animate='promo-card']", {
-        opacity: 0,
-        y: 30,
-        duration: 0.5,
-        stagger: 0.1,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: "[data-animate='promo-card']",
-          start: "top 85%",
-          once: true,
-        },
-      });
-    },
-    { scope: containerRef }
-  );
 
   return (
     <section
