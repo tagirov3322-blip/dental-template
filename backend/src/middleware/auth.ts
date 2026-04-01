@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 function getSecret(): string {
-  return process.env.JWT_SECRET!;
+  return process.env.getSecret()!;
 }
 
 export interface JwtPayload {
@@ -21,7 +21,7 @@ export function requireAdmin(req: Request, res: Response, next: NextFunction): v
   const token = authHeader.split(" ")[1];
 
   try {
-    const payload = jwt.verify(token, JWT_SECRET) as JwtPayload;
+    const payload = jwt.verify(token, getSecret()) as JwtPayload;
     (req as Request & { admin: JwtPayload }).admin = payload;
     next();
   } catch {
@@ -30,11 +30,11 @@ export function requireAdmin(req: Request, res: Response, next: NextFunction): v
 }
 
 export function generateTokens(adminId: number, role: string) {
-  const accessToken = jwt.sign({ adminId, role }, JWT_SECRET, { expiresIn: "15m" });
-  const refreshToken = jwt.sign({ adminId, role, type: "refresh" }, JWT_SECRET, { expiresIn: "7d" });
+  const accessToken = jwt.sign({ adminId, role }, getSecret(), { expiresIn: "15m" });
+  const refreshToken = jwt.sign({ adminId, role, type: "refresh" }, getSecret(), { expiresIn: "7d" });
   return { accessToken, refreshToken };
 }
 
 export function verifyRefreshToken(token: string): JwtPayload & { type: string } {
-  return jwt.verify(token, JWT_SECRET) as JwtPayload & { type: string };
+  return jwt.verify(token, getSecret()) as JwtPayload & { type: string };
 }
