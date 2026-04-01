@@ -102,18 +102,17 @@ export default function Doctors() {
         },
       });
 
-      ScrollTrigger.batch("[data-animate='doctor-card']", {
-        onEnter: (batch) => {
-          gsap.from(batch, {
-            autoAlpha: 0,
-            y: 50,
-            duration: 0.7,
-            stagger: 0.12,
-            ease: "power3.out",
-          });
+      gsap.from("[data-animate='doctor-card']", {
+        autoAlpha: 0,
+        y: 30,
+        duration: 0.6,
+        stagger: 0.12,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: "[data-animate='doctor-card']",
+          start: "top 85%",
+          once: true,
         },
-        start: "top 88%",
-        once: true,
       });
     },
     { scope: containerRef }

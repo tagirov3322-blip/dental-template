@@ -237,21 +237,20 @@ export default function Services() {
         },
       });
 
-      ScrollTrigger.batch("[data-animate='card']", {
-        onEnter: (batch) => {
-          gsap.from(batch, {
-            autoAlpha: 0,
-            y: 40,
-            duration: 0.5,
-            stagger: 0.1,
-            ease: "power2.out",
-          });
+      gsap.from("[data-animate='card']", {
+        autoAlpha: 0,
+        y: 30,
+        duration: 0.5,
+        stagger: 0.08,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 60%",
+          once: true,
         },
-        start: "top 88%",
-        once: true,
       });
     },
-    { scope: containerRef, dependencies: [filtered] }
+    { scope: containerRef }
   );
 
   /* ---- Expand / collapse with GSAP height animation ---- */

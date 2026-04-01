@@ -71,18 +71,17 @@ export default function FAQ() {
         },
       });
 
-      ScrollTrigger.batch("[data-animate='faq-item']", {
-        onEnter: (batch) => {
-          gsap.from(batch, {
-            autoAlpha: 0,
-            y: 20,
-            duration: 0.4,
-            stagger: 0.06,
-            ease: "power2.out",
-          });
+      gsap.from("[data-animate='faq-item']", {
+        autoAlpha: 0,
+        y: 20,
+        duration: 0.4,
+        stagger: 0.06,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: "[data-animate='faq-item']",
+          start: "top 85%",
+          once: true,
         },
-        start: "top 88%",
-        once: true,
       });
     },
     { scope: containerRef }

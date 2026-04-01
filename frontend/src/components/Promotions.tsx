@@ -76,18 +76,17 @@ export default function Promotions() {
         },
       });
 
-      ScrollTrigger.batch("[data-animate='promo-card']", {
-        onEnter: (batch) => {
-          gsap.from(batch, {
-            autoAlpha: 0,
-            y: 40,
-            duration: 0.5,
-            stagger: 0.12,
-            ease: "power2.out",
-          });
+      gsap.from("[data-animate='promo-card']", {
+        autoAlpha: 0,
+        y: 30,
+        duration: 0.5,
+        stagger: 0.1,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: "[data-animate='promo-card']",
+          start: "top 85%",
+          once: true,
         },
-        start: "top 88%",
-        once: true,
       });
     },
     { scope: containerRef }
