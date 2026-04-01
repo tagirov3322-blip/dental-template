@@ -201,7 +201,7 @@ export default function Reviews() {
         <div
           className="mb-[var(--space-lg)]"
         >
-          <h2 className="text-fluid-h1 font-heading text-foreground">
+          <h2 className="text-fluid-h1 font-heading text-white">
             Что говорят пациенты
           </h2>
           <p className="mt-4 text-fluid-body text-white/50 max-w-xl">
@@ -230,7 +230,7 @@ export default function Reviews() {
         <div
           className="mx-auto mt-[var(--space-xl)] max-w-2xl glass-card-dark rounded-2xl p-8"
         >
-          <h3 className="mb-6 text-center text-fluid-h3 font-heading text-foreground">
+          <h3 className="mb-6 text-center text-fluid-h3 font-heading text-white">
             Оставьте свой отзыв
           </h3>
 
