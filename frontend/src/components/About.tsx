@@ -7,14 +7,14 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const photos = [
-  { label: "Ресепшен", color: "from-blue-400 to-blue-600" },
-  { label: "Кабинет терапии", color: "from-sky-400 to-indigo-500" },
-  { label: "Панорамный снимок", color: "from-indigo-400 to-purple-500" },
-  { label: "Зона ожидания", color: "from-cyan-400 to-blue-500" },
-  { label: "Хирургический кабинет", color: "from-blue-500 to-indigo-600" },
-  { label: "Стерилизация", color: "from-violet-400 to-blue-600" },
-  { label: "Детский кабинет", color: "from-sky-300 to-blue-500" },
-  { label: "Оборудование", color: "from-blue-600 to-indigo-700" },
+  { label: "Ресепшен", img: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=600&h=450&fit=crop" },
+  { label: "Кабинет терапии", img: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=600&h=800&fit=crop" },
+  { label: "Панорамный снимок", img: "https://images.unsplash.com/photo-1606811971618-4486d14f3f99?w=600&h=450&fit=crop" },
+  { label: "Зона ожидания", img: "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=600&h=450&fit=crop" },
+  { label: "Хирургический кабинет", img: "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=600&h=800&fit=crop" },
+  { label: "Стерилизация", img: "https://images.unsplash.com/photo-1598256989800-fe5f95da9787?w=600&h=450&fit=crop" },
+  { label: "Современное оборудование", img: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=600&h=450&fit=crop" },
+  { label: "Улыбка пациента", img: "https://images.unsplash.com/photo-1606265752439-1f18756aa5fc?w=600&h=800&fit=crop" },
 ];
 
 export default function About() {
@@ -142,9 +142,12 @@ export default function About() {
                   willChange: "transform",
                 }}
               >
-                {/* Gradient placeholder */}
-                <div
-                  className={`absolute inset-0 bg-gradient-to-br ${photo.color} transition-transform duration-700 ease-out group-hover:scale-110`}
+                {/* Photo */}
+                <img
+                  src={photo.img}
+                  alt={photo.label}
+                  loading="lazy"
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                 />
 
                 {/* Label overlay */}
