@@ -196,50 +196,6 @@ export default function Services() {
     setExpandedId((prev) => (prev === id ? null : id));
   }, []);
 
-  /* ---- Entrance animations ---- */
-  useGSAP(
-    () => {
-      gsap.from("[data-animate='heading']", {
-        opacity: 0,
-        y: 30,
-        duration: 0.6,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: "[data-animate='heading']",
-          start: "top 80%",
-          once: true,
-        },
-      });
-
-      gsap.from("[data-animate='banner']", {
-        opacity: 0,
-        y: 16,
-        duration: 0.5,
-        delay: 0.15,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: "[data-animate='banner']",
-          start: "top 85%",
-          once: true,
-        },
-      });
-
-      gsap.from("[data-animate='tabs']", {
-        opacity: 0,
-        y: 16,
-        duration: 0.4,
-        delay: 0.25,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: "[data-animate='tabs']",
-          start: "top 85%",
-          once: true,
-        },
-      });
-
-    },
-    { scope: containerRef }
-  );
 
   /* ---- Expand / collapse with GSAP height animation ---- */
   useEffect(() => {
