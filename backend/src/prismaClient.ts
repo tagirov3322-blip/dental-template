@@ -1,30 +1,33 @@
-import { PrismaClient } from "./generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 
-let _prisma: PrismaClient | null = null;
+let _prisma: any = null;
 
-function getPrisma(): PrismaClient {
-  if (!_prisma) {
-    const pool = new pg.Pool({
-      host: "aws-1-eu-central-1.pooler.supabase.com",
-      port: 5432,
-      database: "postgres",
-      user: "postgres.uxtsjmshhujeuwbdntek",
-      password: process.env.DB_PASSWORD || "",
-      ssl: { rejectUnauthorized: false },
-    });
+export function initPrisma() {
+  if (_prisma) return _prisma;
 
-    const adapter = new PrismaPg(pool);
-    _prisma = new PrismaClient({ adapter });
-  }
+  // Dynamic import workaround for generated client
+  const { PrismaClient } = require("./generated/prisma/client");
+
+  const pool = new pg.Pool({
+    host: "aws-1-eu-central-1.pooler.supabase.com",
+    port: 5432,
+    database: "postgres",
+    user: "postgres.uxtsjmshhujeuwbdntek",
+    password: process.env.DB_PASSWORD,
+    ssl: { rejectUnauthorized: false },
+  });
+
+  const adapter = new PrismaPg(pool);
+  _prisma = new PrismaClient({ adapter });
   return _prisma;
 }
 
-const prisma = new Proxy({} as PrismaClient, {
-  get(_target, prop) {
-    return (getPrisma() as Record<string | symbol, unknown>)[prop];
+// Для обратной совместимости — default export с getter
+const handler: ProxyHandler<object> = {
+  get(_, prop) {
+    return initPrisma()[prop];
   },
-});
+};
 
-export default prisma;
+export default new Proxy({}, handler);
