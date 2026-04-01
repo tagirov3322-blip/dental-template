@@ -80,7 +80,7 @@ export default function About() {
             <p
               data-animate="about-label"
               className="font-[var(--font-mono)] text-xs font-semibold uppercase tracking-widest text-blue-600"
-              style={{ visibility: "hidden" }}
+              
             >
               О клинике
             </p>
@@ -89,7 +89,7 @@ export default function About() {
             <h2
               data-animate="about-heading"
               className="mt-4 text-fluid-h1 font-[var(--font-heading)] font-bold leading-[1.1] tracking-tight text-gray-900"
-              style={{ visibility: "hidden" }}
+              
             >
               Современная стоматология
               <br className="hidden sm:block" />
@@ -98,7 +98,7 @@ export default function About() {
 
             {/* Description */}
             <div className="mt-8 space-y-4 text-base leading-relaxed text-gray-600 sm:text-lg">
-              <p data-animate="about-desc" style={{ visibility: "hidden" }}>
+              <p data-animate="about-desc" >
                 Клиника{" "}
                 <span className="font-semibold text-gray-900">IQ&nbsp;Dental</span>{" "}
                 переехала по новому адресу —{" "}
@@ -106,7 +106,7 @@ export default function About() {
                 Мы создали пространство, где передовые технологии сочетаются
                 с&nbsp;комфортной атмосферой.
               </p>
-              <p data-animate="about-desc" style={{ visibility: "hidden" }}>
+              <p data-animate="about-desc" >
                 Каждый кабинет оснащён новейшим оборудованием для точной
                 диагностики и&nbsp;безболезненного лечения. Наша команда
                 профессионалов заботится о&nbsp;здоровье вашей улыбки, используя
@@ -130,7 +130,7 @@ export default function About() {
                   card.rotate,
                   card.translate
                 )}
-                style={{ visibility: "hidden" }}
+                
               >
                 {card.label}
               </div>

@@ -102,18 +102,6 @@ export default function Doctors() {
         },
       });
 
-      gsap.from("[data-animate='doctor-card']", {
-        autoAlpha: 0,
-        y: 30,
-        duration: 0.6,
-        stagger: 0.12,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: "[data-animate='doctor-card']",
-          start: "top 85%",
-          once: true,
-        },
-      });
     },
     { scope: containerRef }
   );
@@ -129,7 +117,7 @@ export default function Doctors() {
         <div
           data-animate="doc-label"
           className="mb-3"
-          style={{ visibility: "hidden" }}
+          
         >
           <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
             Команда
@@ -140,7 +128,7 @@ export default function Doctors() {
         <div
           data-animate="doc-heading"
           className="mb-[var(--space-lg)]"
-          style={{ visibility: "hidden" }}
+          
         >
           <h2 className="text-fluid-h1 font-heading text-foreground">
             Наши специалисты
@@ -155,9 +143,7 @@ export default function Doctors() {
           {doctors.map((doctor) => (
             <div
               key={doctor.name}
-              data-animate="doctor-card"
               className="group"
-              style={{ visibility: "hidden" }}
             >
               <div
                 className={cn(

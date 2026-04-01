@@ -231,7 +231,7 @@ export default function Footer() {
           <div
             data-animate="contacts-heading"
             className="mb-16"
-            style={{ visibility: "hidden" }}
+            
           >
             <span className="font-[var(--font-mono)] text-fluid-small uppercase tracking-[0.15em] text-slate-500">
               Связаться с нами
@@ -249,7 +249,7 @@ export default function Footer() {
                   key={item.title}
                   data-animate="contact-item"
                   className="flex items-start gap-5"
-                  style={{ visibility: "hidden" }}
+                  
                 >
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/5 text-slate-400">
                     <item.icon className="h-5 w-5" />
@@ -268,7 +268,7 @@ export default function Footer() {
             <div
               data-animate="contact-map"
               className="overflow-hidden rounded-2xl border border-white/5 min-h-[420px] bg-slate-900 flex flex-col"
-              style={{ visibility: "hidden" }}
+              
             >
               <iframe
                 src="https://yandex.ru/map-widget/v1/?um=constructor%3A&source=constructor"
@@ -302,7 +302,7 @@ export default function Footer() {
             <div
               data-animate="footer-col"
               className="space-y-5"
-              style={{ visibility: "hidden" }}
+              
             >
               <Link href="/" className="flex items-center gap-3">
                 <ToothIcon className="h-9 w-9 text-blue-400" />
@@ -320,7 +320,7 @@ export default function Footer() {
             {/* Col 2 — Navigation */}
             <div
               data-animate="footer-col"
-              style={{ visibility: "hidden" }}
+              
             >
               <h3 className="mb-5 font-[var(--font-mono)] text-fluid-small uppercase tracking-[0.15em] text-slate-500">
                 Навигация
@@ -343,7 +343,7 @@ export default function Footer() {
             {/* Col 3 — Socials */}
             <div
               data-animate="footer-col"
-              style={{ visibility: "hidden" }}
+              
             >
               <h3 className="mb-5 font-[var(--font-mono)] text-fluid-small uppercase tracking-[0.15em] text-slate-500">
                 Мы в соцсетях
@@ -395,7 +395,7 @@ export default function Footer() {
             {/* Col 4 — Contact shortcut */}
             <div
               data-animate="footer-col"
-              style={{ visibility: "hidden" }}
+              
             >
               <h3 className="mb-5 font-[var(--font-mono)] text-fluid-small uppercase tracking-[0.15em] text-slate-500">
                 Контакты

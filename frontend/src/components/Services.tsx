@@ -278,7 +278,7 @@ export default function Services() {
         <div
           data-animate="banner"
           className="mb-12 flex items-center justify-center gap-3 text-sm text-[var(--muted-foreground)]"
-          style={{ visibility: "hidden" }}
+          
         >
           <span className="h-px w-12 bg-[var(--border)]" />
           <Phone className="h-3.5 w-3.5 text-[var(--primary)]" />
@@ -292,7 +292,7 @@ export default function Services() {
         <div
           data-animate="heading"
           className="mx-auto max-w-2xl text-center"
-          style={{ visibility: "hidden" }}
+          
         >
           <span className="font-[var(--font-mono)] text-xs uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
             Услуги клиники
@@ -310,7 +310,7 @@ export default function Services() {
         <div
           data-animate="tabs"
           className="mt-10 flex flex-wrap justify-center gap-2"
-          style={{ visibility: "hidden" }}
+          
         >
           {categories.map(({ label, icon: Icon }) => (
             <button

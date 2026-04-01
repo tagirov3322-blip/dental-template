@@ -243,7 +243,7 @@ export default function Reviews() {
         <div
           data-animate="rev-label"
           className="mb-3"
-          style={{ visibility: "hidden" }}
+          
         >
           <span className="font-mono text-xs uppercase tracking-[0.2em] text-white/40">
             Отзывы
@@ -254,7 +254,7 @@ export default function Reviews() {
         <div
           data-animate="rev-heading"
           className="mb-[var(--space-lg)]"
-          style={{ visibility: "hidden" }}
+          
         >
           <h2 className="text-fluid-h1 font-heading text-white">
             Что говорят пациенты
@@ -268,7 +268,7 @@ export default function Reviews() {
         <div
           data-animate="rev-columns"
           className="flex justify-center gap-6 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden"
-          style={{ visibility: "hidden" }}
+          
         >
           <TestimonialsColumn testimonials={firstColumn} duration={15} />
           <TestimonialsColumn
@@ -287,7 +287,7 @@ export default function Reviews() {
         <div
           data-animate="rev-form"
           className="mx-auto mt-[var(--space-xl)] max-w-2xl glass-card-dark rounded-2xl p-8"
-          style={{ visibility: "hidden" }}
+          
         >
           <h3 className="mb-6 text-center text-fluid-h3 font-heading text-white">
             Оставьте свой отзыв

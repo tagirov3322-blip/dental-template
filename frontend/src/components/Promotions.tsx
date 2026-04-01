@@ -103,7 +103,7 @@ export default function Promotions() {
         <div
           data-animate="promo-heading"
           className="mb-16"
-          style={{ visibility: "hidden" }}
+          
         >
           <span className="font-[var(--font-mono)] text-fluid-small uppercase tracking-[0.15em] text-muted-foreground">
             Выгодные предложения
@@ -136,7 +136,7 @@ export default function Promotions() {
                     : "bg-[#f0f4ff]",
                   "hover:shadow-lg"
                 )}
-                style={{ visibility: "hidden" }}
+                
               >
                 {/* Hit badge */}
                 {promo.isHit && (

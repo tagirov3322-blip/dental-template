@@ -262,7 +262,7 @@ export default function Booking() {
         <div
           data-animate="booking-heading"
           className="mx-auto max-w-2xl text-center mb-16"
-          style={{ visibility: "hidden" }}
+          
         >
           <span className="font-[var(--font-mono)] text-fluid-small uppercase tracking-[0.15em] text-blue-200">
             Онлайн-запись
@@ -281,7 +281,7 @@ export default function Booking() {
           <div
             data-animate="booking-form"
             className="lg:col-span-3"
-            style={{ visibility: "hidden" }}
+            
           >
             <form
               onSubmit={handleSubmit}
@@ -518,7 +518,7 @@ export default function Booking() {
           <div
             data-animate="booking-info"
             className="lg:col-span-2"
-            style={{ visibility: "hidden" }}
+            
           >
             <div className="sticky top-8 space-y-6">
               {/* Contact info card — glass-card-dark */}

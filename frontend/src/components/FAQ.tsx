@@ -134,7 +134,7 @@ export default function FAQ() {
         <div
           data-animate="faq-heading"
           className="mb-16"
-          style={{ visibility: "hidden" }}
+          
         >
           <span className="font-[var(--font-mono)] text-fluid-small uppercase tracking-[0.15em] text-muted-foreground">
             FAQ
@@ -158,7 +158,7 @@ export default function FAQ() {
               <div
                 key={index}
                 data-animate="faq-item"
-                style={{ visibility: "hidden" }}
+                
               >
                 <button
                   type="button"
