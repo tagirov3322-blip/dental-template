@@ -124,20 +124,30 @@ export default function About() {
         >
           <div
             ref={gridRef}
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
+            className="grid gap-3 sm:gap-4"
             style={{
               transformStyle: "preserve-3d",
               willChange: "transform",
               transition: "none",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gridTemplateRows: "200px 200px 200px",
             }}
           >
-            {photos.map((photo, idx) => (
+            {photos.map((photo, idx) => {
+              // Bento layout: card 0 spans 2 rows, card 4 spans 2 cols
+              const spanClass =
+                idx === 0
+                  ? "row-span-2"
+                  : idx === 4
+                    ? "col-span-2"
+                    : "";
+
+              return (
               <div
                 key={idx}
                 data-photo
-                className="group relative overflow-hidden rounded-2xl cursor-pointer"
+                className={`group relative overflow-hidden rounded-2xl cursor-pointer ${spanClass}`}
                 style={{
-                  aspectRatio: idx % 3 === 0 ? "3/4" : "4/3",
                   transformStyle: "preserve-3d",
                   willChange: "transform",
                 }}
@@ -162,7 +172,8 @@ export default function About() {
                 {/* Shine on hover */}
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/25 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
