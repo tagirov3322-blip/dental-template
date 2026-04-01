@@ -4,50 +4,9 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import {
-  Shield,
-  Clock,
-  CreditCard,
-  Award,
-  Sparkles,
-  Heart,
-} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
-
-const advantages = [
-  {
-    icon: Shield,
-    title: "Лицензированная клиника",
-    description: "Работаем в полном соответствии с требованиями законодательства.",
-  },
-  {
-    icon: Clock,
-    title: "Без выходных",
-    description: "Удобный график — запишитесь в любое подходящее время.",
-  },
-  {
-    icon: CreditCard,
-    title: "Удобная оплата",
-    description: "Наличные, карты и рассрочка — выбирайте удобный способ.",
-  },
-  {
-    icon: Award,
-    title: "Опытные врачи",
-    description: "Регулярное повышение квалификации и передовые методики.",
-  },
-  {
-    icon: Sparkles,
-    title: "Новейшее оборудование",
-    description: "Точная диагностика и комфортное лечение на современной технике.",
-  },
-  {
-    icon: Heart,
-    title: "Индивидуальный подход",
-    description: "Персональный план лечения с учётом ваших пожеланий.",
-  },
-];
 
 const photoCards = [
   { label: "Интерьер клиники", rotate: "-rotate-2", translate: "translate-x-4" },
@@ -104,20 +63,6 @@ export default function About() {
         },
       });
 
-      /* ---- Advantages batch ---- */
-      ScrollTrigger.batch("[data-animate='advantage']", {
-        onEnter: (elements) => {
-          gsap.from(elements, {
-            autoAlpha: 0,
-            y: 30,
-            stagger: 0.1,
-            duration: 0.6,
-            ease: "power3.out",
-          });
-        },
-        start: "top 90%",
-        once: true,
-      });
     },
     { scope: containerRef }
   );
@@ -193,33 +138,6 @@ export default function About() {
           </div>
         </div>
 
-        {/* ===== Advantages 3-column grid ===== */}
-        <div className="group-hover-dim mt-24 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {advantages.map((item, idx) => {
-            const Icon = item.icon;
-            return (
-              <div
-                key={idx}
-                data-animate="advantage"
-                className={cn(
-                  "rounded-2xl border border-gray-100 bg-white p-7",
-                  "shadow-sm transition-all duration-300 hover:shadow-lg hover:border-blue-100"
-                )}
-                style={{ visibility: "hidden" }}
-              >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                  <Icon className="h-6 w-6" strokeWidth={1.8} />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {item.title}
-                </h3>
-                <p className="mt-1 text-sm leading-relaxed text-gray-500">
-                  {item.description}
-                </p>
-              </div>
-            );
-          })}
-        </div>
       </div>
     </section>
   );
