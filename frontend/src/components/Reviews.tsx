@@ -144,17 +144,17 @@ function TestimonialsColumn({
             {testimonials.map((review) => (
               <div
                 key={`${index}-${review.id}`}
-                className="bg-white rounded-2xl p-6 max-w-xs w-full"
+                className="glass-card-dark rounded-2xl p-6 max-w-xs w-full"
               >
                 <StarRating rating={review.rating} />
-                <p className="mt-4 text-muted-foreground text-sm leading-relaxed">
+                <p className="mt-4 text-white/70 text-sm leading-relaxed">
                   {review.text}
                 </p>
                 <div className="mt-5 flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--muted)] text-xs font-semibold text-foreground">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-white">
                     {getInitials(review.name)}
                   </div>
-                  <div className="text-sm font-medium tracking-tight text-foreground">
+                  <div className="text-sm font-medium tracking-tight text-white">
                     {review.name}
                   </div>
                 </div>
@@ -186,13 +186,13 @@ export default function Reviews() {
   };
 
   return (
-    <section id="reviews" className="bg-[var(--background)] py-[var(--space-section)]">
+    <section id="reviews" className="bg-[#0a0f1a] text-white py-[var(--space-section)]">
       <div ref={containerRef} className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section label */}
         <div
           className="mb-3"
         >
-          <span className="font-mono text-xs uppercase tracking-[0.2em] text-foreground/40">
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-white/40">
             Отзывы
           </span>
         </div>
@@ -204,7 +204,7 @@ export default function Reviews() {
           <h2 className="text-fluid-h1 font-heading text-foreground">
             Что говорят пациенты
           </h2>
-          <p className="mt-4 text-fluid-body text-foreground/50 max-w-xl">
+          <p className="mt-4 text-fluid-body text-white/50 max-w-xl">
             Рейтинг 4.0 на ПроДокторов
           </p>
         </div>
@@ -228,14 +228,14 @@ export default function Reviews() {
 
         {/* Review Submission Form */}
         <div
-          className="mx-auto mt-[var(--space-xl)] max-w-2xl bg-white rounded-2xl p-8"
+          className="mx-auto mt-[var(--space-xl)] max-w-2xl glass-card-dark rounded-2xl p-8"
         >
           <h3 className="mb-6 text-center text-fluid-h3 font-heading text-foreground">
             Оставьте свой отзыв
           </h3>
 
           {submitted && (
-            <div className="mb-6 rounded-xl bg-green-50 border border-green-200 p-4 text-center text-green-600 text-sm">
+            <div className="mb-6 rounded-xl bg-green-500/10 border border-green-500/20 p-4 text-center text-green-400 text-sm">
               Спасибо за ваш отзыв!
             </div>
           )}
@@ -254,7 +254,7 @@ export default function Reviews() {
                 value={formName}
                 onChange={(e) => setFormName(e.target.value)}
                 placeholder="Иван Иванов"
-                className="w-full rounded-xl border border-[var(--border)] bg-[var(--muted)] px-4 py-3 text-foreground placeholder-muted-foreground/50 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/20"
+                className="w-full rounded-xl border border-[var(--border)] bg-white/10 border-white/10 px-4 py-3 text-white placeholder-white/30 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/20"
                 required
               />
             </div>
@@ -283,14 +283,14 @@ export default function Reviews() {
                 onChange={(e) => setFormText(e.target.value)}
                 placeholder="Расскажите о вашем опыте..."
                 rows={4}
-                className="w-full resize-none rounded-xl border border-[var(--border)] bg-[var(--muted)] px-4 py-3 text-foreground placeholder-muted-foreground/50 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/20"
+                className="w-full resize-none rounded-xl border border-[var(--border)] bg-white/10 border-white/10 px-4 py-3 text-white placeholder-white/30 transition-colors focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/20"
                 required
               />
             </div>
 
             <button
               type="submit"
-              className="w-full rounded-xl bg-[var(--primary)] px-6 py-3.5 font-semibold text-white transition-all duration-300 hover:bg-[#353d5c] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/20"
+              className="w-full rounded-xl bg-white px-6 py-3.5 font-semibold text-[#0a0f1a] transition-all duration-300 hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/20"
             >
               Отправить отзыв
             </button>

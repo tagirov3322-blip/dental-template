@@ -18,8 +18,8 @@ export default function Home() {
         <About />
         <Services />
         <Doctors />
-        <Promotions />
         <Reviews />
+        <Promotions />
         <Booking />
         <FAQ />
       </main>
