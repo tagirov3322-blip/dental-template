@@ -21,7 +21,7 @@ export default function About() {
     () => {
       /* ---- Section label + heading ---- */
       gsap.from("[data-animate='about-label'], [data-animate='about-heading']", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 40,
         duration: 0.8,
         ease: "power3.out",
@@ -35,7 +35,7 @@ export default function About() {
 
       /* ---- Description paragraphs ---- */
       gsap.from("[data-animate='about-desc']", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 30,
         duration: 0.7,
         ease: "power3.out",
@@ -49,7 +49,7 @@ export default function About() {
 
       /* ---- Photo cards ---- */
       gsap.from("[data-animate='photo-card']", {
-        autoAlpha: 0,
+        opacity: 0,
         scale: 0.95,
         duration: 0.7,
         ease: "power3.out",

@@ -65,7 +65,7 @@ export default function Promotions() {
   useGSAP(
     () => {
       gsap.from("[data-animate='promo-heading']", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 30,
         duration: 0.6,
         ease: "power2.out",
@@ -77,7 +77,7 @@ export default function Promotions() {
       });
 
       gsap.from("[data-animate='promo-card']", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 30,
         duration: 0.5,
         stagger: 0.1,

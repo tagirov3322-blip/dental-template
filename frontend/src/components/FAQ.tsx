@@ -60,7 +60,7 @@ export default function FAQ() {
   useGSAP(
     () => {
       gsap.from("[data-animate='faq-heading']", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 30,
         duration: 0.6,
         ease: "power2.out",
@@ -72,7 +72,7 @@ export default function FAQ() {
       });
 
       gsap.from("[data-animate='faq-item']", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 20,
         duration: 0.4,
         stagger: 0.06,
@@ -102,7 +102,7 @@ export default function FAQ() {
       } else {
         gsap.to(el, {
           height: 0,
-          autoAlpha: 0,
+          opacity: 0,
           duration: 0.35,
           ease: "power2.inOut",
           onComplete: () => {

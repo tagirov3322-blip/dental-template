@@ -161,7 +161,7 @@ export default function Footer() {
   useGSAP(
     () => {
       gsap.from("[data-animate='contacts-heading']", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 30,
         duration: 0.6,
         ease: "power2.out",
@@ -173,7 +173,7 @@ export default function Footer() {
       });
 
       gsap.from("[data-animate='contact-item']", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 20,
         duration: 0.5,
         stagger: 0.1,
@@ -186,7 +186,7 @@ export default function Footer() {
       });
 
       gsap.from("[data-animate='contact-map']", {
-        autoAlpha: 0,
+        opacity: 0,
         scale: 0.97,
         duration: 0.6,
         ease: "power2.out",
@@ -203,7 +203,7 @@ export default function Footer() {
   useGSAP(
     () => {
       gsap.from("[data-animate='footer-col']", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 20,
         duration: 0.4,
         stagger: 0.1,

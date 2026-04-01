@@ -184,7 +184,7 @@ export default function Booking() {
   useGSAP(
     () => {
       gsap.from("[data-animate='booking-heading']", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 30,
         duration: 0.6,
         ease: "power2.out",
@@ -196,7 +196,7 @@ export default function Booking() {
       });
 
       gsap.from("[data-animate='booking-form']", {
-        autoAlpha: 0,
+        opacity: 0,
         x: -40,
         duration: 0.6,
         delay: 0.1,
@@ -209,7 +209,7 @@ export default function Booking() {
       });
 
       gsap.from("[data-animate='booking-info']", {
-        autoAlpha: 0,
+        opacity: 0,
         x: 40,
         duration: 0.6,
         delay: 0.2,
@@ -227,13 +227,13 @@ export default function Booking() {
   /* Animate success / error messages when they appear */
   useEffect(() => {
     if (successMessage && successRef.current) {
-      gsap.from(successRef.current, { autoAlpha: 0, y: -10, duration: 0.3 });
+      gsap.from(successRef.current, { opacity: 0, y: -10, duration: 0.3 });
     }
   }, [successMessage]);
 
   useEffect(() => {
     if (apiError && errorRef.current) {
-      gsap.from(errorRef.current, { autoAlpha: 0, y: -10, duration: 0.3 });
+      gsap.from(errorRef.current, { opacity: 0, y: -10, duration: 0.3 });
     }
   }, [apiError]);
 

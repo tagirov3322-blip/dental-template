@@ -200,7 +200,7 @@ export default function Services() {
   useGSAP(
     () => {
       gsap.from("[data-animate='heading']", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 30,
         duration: 0.6,
         ease: "power2.out",
@@ -212,7 +212,7 @@ export default function Services() {
       });
 
       gsap.from("[data-animate='banner']", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 16,
         duration: 0.5,
         delay: 0.15,
@@ -225,7 +225,7 @@ export default function Services() {
       });
 
       gsap.from("[data-animate='tabs']", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 16,
         duration: 0.4,
         delay: 0.25,
@@ -256,7 +256,7 @@ export default function Services() {
       } else {
         gsap.to(el, {
           height: 0,
-          autoAlpha: 0,
+          opacity: 0,
           duration: 0.3,
           ease: "power2.inOut",
           onComplete: () => {

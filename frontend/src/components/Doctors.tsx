@@ -162,7 +162,7 @@ export default function Doctors() {
   useGSAP(
     () => {
       gsap.from("[data-animate='doc-label']", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 20,
         duration: 0.5,
         scrollTrigger: {
@@ -173,7 +173,7 @@ export default function Doctors() {
       });
 
       gsap.from("[data-animate='doc-heading']", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 30,
         duration: 0.6,
         delay: 0.1,

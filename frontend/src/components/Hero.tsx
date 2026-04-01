@@ -41,7 +41,7 @@ export default function Hero() {
     () => {
       // Heading lines — split-line stagger
       gsap.from("[data-hero-line]", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 60,
         duration: 1,
         stagger: 0.15,
@@ -50,7 +50,7 @@ export default function Hero() {
 
       // Subtitle
       gsap.from("[data-hero-subtitle]", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 20,
         duration: 0.8,
         delay: 0.5,
@@ -59,7 +59,7 @@ export default function Hero() {
 
       // Buttons staggered
       gsap.from("[data-hero-btn]", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 20,
         duration: 0.8,
         delay: 0.7,
@@ -69,7 +69,7 @@ export default function Hero() {
 
       // Glassmorphism card
       gsap.from("[data-hero-card]", {
-        autoAlpha: 0,
+        opacity: 0,
         scale: 0.9,
         duration: 1,
         delay: 0.5,
@@ -78,7 +78,7 @@ export default function Hero() {
 
       // Divider line
       gsap.from("[data-hero-divider]", {
-        autoAlpha: 0,
+        opacity: 0,
         scaleX: 0,
         duration: 0.8,
         delay: 1.0,
@@ -87,7 +87,7 @@ export default function Hero() {
 
       // Marquee fade in
       gsap.from("[data-hero-marquee]", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 10,
         duration: 0.8,
         delay: 1.2,

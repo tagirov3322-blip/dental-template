@@ -179,7 +179,7 @@ export default function Reviews() {
   useGSAP(
     () => {
       gsap.from("[data-animate='rev-label']", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 20,
         duration: 0.5,
         scrollTrigger: {
@@ -190,7 +190,7 @@ export default function Reviews() {
       });
 
       gsap.from("[data-animate='rev-heading']", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 30,
         duration: 0.6,
         delay: 0.1,
@@ -202,7 +202,7 @@ export default function Reviews() {
       });
 
       gsap.from("[data-animate='rev-columns']", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 40,
         duration: 0.8,
         scrollTrigger: {
@@ -213,7 +213,7 @@ export default function Reviews() {
       });
 
       gsap.from("[data-animate='rev-form']", {
-        autoAlpha: 0,
+        opacity: 0,
         y: 40,
         duration: 0.7,
         scrollTrigger: {
