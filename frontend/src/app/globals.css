@@ -172,17 +172,7 @@ body {
    Hover one card, dim the rest
    ═══════════════════════════════════════════ */
 
-.group-hover-dim > * {
-  transition: opacity 0.4s ease;
-}
-
-.group-hover-dim:hover > * {
-  opacity: 0.4;
-}
-
-.group-hover-dim:hover > *:hover {
-  opacity: 1;
-}
+/* group-hover-dim removed */
 
 /* ═══════════════════════════════════════════
    GLASS CARD
