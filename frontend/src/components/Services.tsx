@@ -109,24 +109,24 @@ export default function Services() {
                 <button
                   onClick={() => toggleExpand(service.id)}
                   className={cn(
-                    "flex w-full items-center gap-6 px-8 py-6 text-left transition-colors duration-150",
+                    "flex w-full items-center gap-6 px-8 py-7 text-left transition-colors duration-150",
                     "hover:bg-[var(--muted)]",
                     isExpanded && "bg-[var(--muted)]"
                   )}
                 >
                   {/* Name */}
-                  <span className="flex-1 text-lg font-medium text-[var(--foreground)]">
+                  <span className="flex-1 text-xl font-medium text-[var(--foreground)]">
                     {service.name}
                   </span>
 
                   {/* Duration */}
-                  <span className="hidden sm:flex items-center gap-1.5 text-sm text-[var(--muted-foreground)] shrink-0">
+                  <span className="hidden sm:flex items-center gap-1.5 text-base text-[var(--muted-foreground)] shrink-0">
                     <Clock className="h-4 w-4" />
                     {service.duration}
                   </span>
 
                   {/* Price */}
-                  <span className="font-[var(--font-mono)] text-base font-bold text-[var(--foreground)] shrink-0 w-36 text-right">
+                  <span className="font-[var(--font-mono)] text-lg font-bold text-[var(--foreground)] shrink-0 w-40 text-right">
                     {service.price}
                   </span>
 
@@ -145,11 +145,11 @@ export default function Services() {
                   className="overflow-hidden"
                   style={{ height: 0, visibility: "hidden", display: "none" }}
                 >
-                  <div className="px-6 pb-5 pt-0">
-                    <p className="text-sm leading-relaxed text-[var(--muted-foreground)] mb-2">
+                  <div className="px-8 pb-7 pt-2">
+                    <p className="text-base leading-relaxed text-[var(--muted-foreground)] mb-3">
                       {service.description}
                     </p>
-                    <p className="text-sm leading-relaxed text-[var(--muted-foreground)]">
+                    <p className="text-base leading-relaxed text-[var(--muted-foreground)]">
                       {service.details}
                     </p>
                   </div>
