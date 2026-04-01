@@ -94,6 +94,33 @@ router.post("/", validate(createBookingSchema), asyncHandler(async (req: Request
   );
   if (!scheduleCheck.ok) { res.status(400).json({ error: scheduleCheck.reason }); return; }
 
+  // Проверка на пересечение записей — нельзя записать к врачу на занятое время
+  const timeNum = Number((time as string).replace(":", ""));
+  const serviceDuration = service.duration; // в минутах
+  const timeEndNum = timeNum + Math.floor(serviceDuration / 60) * 100 + (serviceDuration % 60);
+
+  const sameDayBookings = await prisma.booking.findMany({
+    where: {
+      doctorId: Number(doctorId),
+      date: bookingDate,
+      status: { in: ["new", "confirmed"] },
+    },
+    include: { service: true },
+  });
+
+  const hasConflict = sameDayBookings.some((b) => {
+    const bStart = Number(b.time.replace(":", ""));
+    const bDuration = b.service.duration;
+    const bEnd = bStart + Math.floor(bDuration / 60) * 100 + (bDuration % 60);
+    // Пересечение: новая запись начинается до конца существующей И заканчивается после начала существующей
+    return timeNum < bEnd && timeEndNum > bStart;
+  });
+
+  if (hasConflict) {
+    res.status(400).json({ error: "Это время уже занято у выбранного врача" });
+    return;
+  }
+
   const booking = await prisma.booking.create({
     data: {
       patientName: patientName as string, phone: phone as string,
