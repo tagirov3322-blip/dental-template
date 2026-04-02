@@ -67,6 +67,8 @@ const PIE_COLORS = ["#f59e0b", "#3b82f6", "#22c55e", "#ef4444"];
 export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [recentBookings, setRecentBookings] = useState<Booking[]>([]);
+  const [activePieIndex, setActivePieIndex] = useState(-1);
+  const [pieHovered, setPieHovered] = useState(false);
 
   useEffect(() => {
     api.get<Stats>("/stats").then(setStats).catch(console.error);
