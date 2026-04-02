@@ -61,19 +61,20 @@ export default function SSEToast() {
       {toasts.map((t) => (
         <div
           key={t.id}
-          className="flex items-start gap-4 rounded-2xl bg-[#2a3250] px-6 py-5 shadow-2xl shadow-black/20"
+          className="flex items-center gap-5 rounded-3xl bg-[#2a3250] px-8 py-6 shadow-2xl shadow-black/30"
           style={{
-            minWidth: 340,
-            animation: t.leaving ? "toast-out 0.5s ease forwards" : "toast-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
+            minWidth: 420,
+            animation: t.leaving ? "toast-out 0.5s ease forwards" : "toast-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
+            borderLeft: `4px solid ${t.color}`,
           }}
         >
-          <div className="relative mt-1">
-            <div className="h-3 w-3 rounded-full" style={{ backgroundColor: t.color }} />
-            <div className="absolute inset-0 h-3 w-3 animate-ping rounded-full" style={{ backgroundColor: t.color, opacity: 0.4 }} />
+          <div className="relative shrink-0">
+            <div className="h-4 w-4 rounded-full" style={{ backgroundColor: t.color }} />
+            <div className="absolute inset-0 h-4 w-4 animate-ping rounded-full" style={{ backgroundColor: t.color, opacity: 0.5 }} />
           </div>
-          <div>
-            <p className="text-base font-semibold text-white">{t.title}</p>
-            <p className="mt-1 text-sm text-gray-400 line-clamp-1">{t.subtitle}</p>
+          <div className="flex-1">
+            <p className="text-lg font-bold text-white">{t.title}</p>
+            <p className="mt-1 text-sm text-gray-300">{t.subtitle}</p>
           </div>
         </div>
       ))}
