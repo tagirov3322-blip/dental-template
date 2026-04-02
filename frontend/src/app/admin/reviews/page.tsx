@@ -69,7 +69,7 @@ export default function AdminReviews() {
       <div className="page-controls mt-4 flex gap-2">
         {[{ v: "", l: "Все" }, { v: "false", l: "На модерации" }, { v: "true", l: "Одобренные" }].map((f) => (
           <button key={f.v} onClick={() => setFilter(f.v)}
-            className={`rounded-xl px-4 py-2 text-sm font-medium transition ${filter === f.v ? "bg-[#2a3250] text-white" : "bg-white text-gray-600 hover:bg-gray-50"}`}>
+            className={`filter-btn rounded-xl px-4 py-2 text-sm font-medium transition ${filter === f.v ? "bg-[#2a3250] text-white" : "bg-white text-gray-600 hover:bg-gray-50"}`}>
             {f.l}
           </button>
         ))}
