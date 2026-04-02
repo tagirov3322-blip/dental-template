@@ -50,8 +50,8 @@ export default function AdminDoctors() {
         if (gridRef.current) {
           gsap.fromTo(
             gridRef.current.querySelectorAll(".doctor-card"),
-            { y: 20, opacity: 0, scale: 0.96 },
-            { y: 0, opacity: 1, scale: 1, duration: 0.4, stagger: 0.06, ease: "power2.out" }
+            { y: 25, opacity: 0, scale: 0.95 },
+            { y: 0, opacity: 1, scale: 1, duration: 0.8, stagger: 0.1, ease: "power3.out" }
           );
         }
       });
