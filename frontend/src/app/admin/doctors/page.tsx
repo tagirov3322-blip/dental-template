@@ -38,13 +38,20 @@ export default function AdminDoctors() {
 
   const save = async () => {
     if (!editing) return;
-    if (editing.id) {
-      await api.put(`/doctors/${editing.id}`, editing);
-    } else {
-      await api.post("/doctors", editing);
+    const { id, ...rest } = editing as Doctor & Record<string, unknown>;
+    const body = { name: rest.name, specialty: rest.specialty, experience: rest.experience, photo: rest.photo, description: rest.description, isActive: rest.isActive };
+    try {
+      if (id) {
+        await api.put(`/doctors/${id}`, body);
+      } else {
+        await api.post("/doctors", body);
+      }
+      setEditing(null);
+      load();
+    } catch (err) {
+      console.error("Save error:", err);
+      alert(err instanceof Error ? err.message : "Ошибка сохранения");
     }
-    setEditing(null);
-    load();
   };
 
   const remove = async (id: number) => {
