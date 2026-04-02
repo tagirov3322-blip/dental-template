@@ -1,43 +1,56 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
 const SSE_URL = API_URL.replace(/\/api$/, "") + "/api/events";
 
-let eventSource: EventSource | null = null;
-const listeners: Map<string, Set<() => void>> = new Map();
+const listeners: Set<() => void> = new Set();
+let es: EventSource | null = null;
+
+function notifyAll() {
+  listeners.forEach((cb) => cb());
+}
 
 function connect() {
   if (typeof window === "undefined") return;
-  if (eventSource) return;
 
-  eventSource = new EventSource(SSE_URL);
+  // Закрываем старое соединение если есть
+  if (es) {
+    es.close();
+    es = null;
+  }
 
-  eventSource.onopen = () => {
-    console.log("[SSE] connected to", SSE_URL);
+  es = new EventSource(SSE_URL);
+
+  es.onopen = () => {
+    console.log("[SSE] connected");
   };
 
-  eventSource.onerror = () => {
-    console.log("[SSE] error, will reconnect automatically");
+  es.onerror = () => {
+    // EventSource автоматически reconnectится
+    // Но если совсем мёртвый — переподключим через 3 сек
+    if (es?.readyState === EventSource.CLOSED) {
+      console.log("[SSE] closed, reconnecting in 3s...");
+      es = null;
+      setTimeout(connect, 3000);
+    }
   };
 
-  // Слушаем все booking events
-  ["new_booking", "booking_updated", "booking_deleted"].forEach((event) => {
-    eventSource!.addEventListener(event, () => {
-      console.log("[SSE] event:", event);
-      const cbs = listeners.get(event);
-      if (cbs) cbs.forEach((cb) => cb());
-      // Также вызываем wildcard слушатели
-      const wildcardCbs = listeners.get("*");
-      if (wildcardCbs) wildcardCbs.forEach((cb) => cb());
-    });
-  });
+  // Слушаем все события
+  es.addEventListener("new_booking", () => { console.log("[SSE] new_booking"); notifyAll(); });
+  es.addEventListener("booking_updated", () => { console.log("[SSE] booking_updated"); notifyAll(); });
+  es.addEventListener("booking_deleted", () => { console.log("[SSE] booking_deleted"); notifyAll(); });
 }
 
-export function onSSE(event: string, callback: () => void): () => void {
-  connect();
-  if (!listeners.has(event)) listeners.set(event, new Set());
-  listeners.get(event)!.add(callback);
+// Подключаемся при первом вызове
+let connected = false;
 
-  // Return cleanup function
+export function onSSE(callback: () => void): () => void {
+  listeners.add(callback);
+
+  if (!connected) {
+    connected = true;
+    connect();
+  }
+
   return () => {
-    listeners.get(event)?.delete(callback);
+    listeners.delete(callback);
   };
 }
