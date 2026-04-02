@@ -70,7 +70,7 @@ export default function AdminDashboard() {
   loadRef.current = loadDashboard;
 
   useEffect(() => { loadDashboard(); }, []);
-  useEffect(() => { return onSSE("*", () => loadRef.current()); }, []);
+  useEffect(() => { return onSSE(() => loadRef.current()); }, []);
 
   // GSAP entrance animations
   useGSAP(() => {
