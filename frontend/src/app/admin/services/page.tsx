@@ -77,7 +77,7 @@ export default function AdminServices() {
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-400">{cat}</h2>
             <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
               {items.map((s, i) => (
-                <div key={s.id} className={`flex items-center justify-between px-5 py-3.5 ${i > 0 ? "border-t border-gray-50" : ""}`}>
+                <div key={s.id} className={`service-row flex items-center justify-between px-5 py-3.5 ${i > 0 ? "border-t border-gray-50" : ""}`}>
                   <div className="flex-1">
                     <span className="font-medium text-gray-900">{s.name}</span>
                     <span className="ml-2 text-xs text-gray-400">{s.duration} мин</span>
