@@ -250,14 +250,16 @@ function DoctorModal({
                     {doctor.experience} лет
                   </p>
                 </div>
+                {doctor.schedule && (
                 <div className="rounded-xl bg-muted px-4 py-2.5">
                   <p className="font-[var(--font-mono)] text-xs uppercase tracking-wider text-muted-foreground">
                     График
                   </p>
-                  <p className="font-[var(--font-heading)] text-lg font-bold text-foreground">
-                    {doctor.schedule}
+                  <p className="font-[var(--font-heading)] text-sm font-bold text-foreground">
+                    {Object.keys(doctor.schedule).map(d => d.slice(0,2).toUpperCase()).join(", ")}
                   </p>
                 </div>
+                )}
               </div>
 
               <a
