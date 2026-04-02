@@ -148,7 +148,7 @@ export default function AdminDashboard() {
           {stats.popularServices.length > 0 ? (
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={stats.popularServices} layout="vertical" margin={{ left: 0, right: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f3f4f6" />
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f3f4f6" fill="none" />
                 <XAxis type="number" tick={{ fontSize: 11, fill: "#9ca3af" }} axisLine={false} tickLine={false} />
                 <YAxis type="category" dataKey="serviceName" width={160} tick={{ fontSize: 12, fill: "#374151" }} axisLine={false} tickLine={false} />
                 <Tooltip
