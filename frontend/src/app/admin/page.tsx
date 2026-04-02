@@ -117,7 +117,7 @@ export default function AdminDashboard() {
           <p className="mt-3 text-5xl font-bold text-[#2a3250]">{stats.totalBookings}</p>
           <div className="mt-4 space-y-1.5">
             {[{ label: "Новые", value: stats.newBookings, color: "#f59e0b" }, { label: "Подтверждённые", value: stats.confirmedBookings, color: "#3b82f6" }, { label: "Завершённые", value: stats.completedBookings, color: "#22c55e" }, { label: "Отменённые", value: stats.cancelledBookings, color: "#ef4444" }].map((s) => (
-              <div key={s.label} className="flex items-center justify-between text-xs">
+              <div key={s.label} className="dash-stat-row flex items-center justify-between text-xs">
                 <span className="flex items-center gap-1.5 text-gray-500"><span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: s.color }} />{s.label}</span>
                 <span className="font-semibold text-[#2a3250]">{s.value}</span>
               </div>
