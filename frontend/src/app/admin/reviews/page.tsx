@@ -61,7 +61,7 @@ export default function AdminReviews() {
           gsap.fromTo(
             listRef.current.querySelectorAll(".review-card"),
             { y: 15, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.35, stagger: 0.04, ease: "power2.out" }
+            { y: 0, opacity: 1, duration: 0.7, stagger: 0.07, ease: "power3.out" }
           );
         }
       });
