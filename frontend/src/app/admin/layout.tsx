@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { isAuthenticated, clearTokens } from "@/lib/api";
+import gsap from "gsap";
 
 const NAV = [
   { href: "/admin", label: "Дашборд", icon: "📊" },
