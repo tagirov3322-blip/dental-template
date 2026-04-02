@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { isAuthenticated, clearTokens } from "@/lib/api";
 import gsap from "gsap";
+import SSEToast from "@/components/admin/SSEToast";
 
 const NAV = [
   { href: "/admin", label: "Дашборд", icon: "📊" },
