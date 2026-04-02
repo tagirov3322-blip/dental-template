@@ -1,56 +1,57 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
 const SSE_URL = API_URL.replace(/\/api$/, "") + "/api/events";
 
-const listeners: Set<() => void> = new Set();
+export type SSEEvent = { type: string; data?: Record<string, unknown> };
+
+const dataListeners: Set<(evt: SSEEvent) => void> = new Set();
+const reloadListeners: Set<() => void> = new Set();
 let es: EventSource | null = null;
 
-function notifyAll() {
-  listeners.forEach((cb) => cb());
+function notify(evt: SSEEvent) {
+  dataListeners.forEach((cb) => cb(evt));
+  reloadListeners.forEach((cb) => cb());
 }
 
 function connect() {
   if (typeof window === "undefined") return;
-
-  // Закрываем старое соединение если есть
-  if (es) {
-    es.close();
-    es = null;
-  }
+  if (es) { es.close(); es = null; }
 
   es = new EventSource(SSE_URL);
-
-  es.onopen = () => {
-    console.log("[SSE] connected");
-  };
-
+  es.onopen = () => console.log("[SSE] connected");
   es.onerror = () => {
-    // EventSource автоматически reconnectится
-    // Но если совсем мёртвый — переподключим через 3 сек
     if (es?.readyState === EventSource.CLOSED) {
-      console.log("[SSE] closed, reconnecting in 3s...");
       es = null;
       setTimeout(connect, 3000);
     }
   };
 
-  // Слушаем все события
-  es.addEventListener("new_booking", () => { console.log("[SSE] new_booking"); notifyAll(); });
-  es.addEventListener("booking_updated", () => { console.log("[SSE] booking_updated"); notifyAll(); });
-  es.addEventListener("booking_deleted", () => { console.log("[SSE] booking_deleted"); notifyAll(); });
+  const handle = (type: string) => (e: MessageEvent) => {
+    console.log("[SSE]", type);
+    let data;
+    try { data = JSON.parse(e.data); } catch { data = {}; }
+    notify({ type, data });
+  };
+
+  es.addEventListener("new_booking", handle("new_booking"));
+  es.addEventListener("booking_updated", handle("booking_updated"));
+  es.addEventListener("booking_deleted", handle("booking_deleted"));
 }
 
-// Подключаемся при первом вызове
 let connected = false;
+function ensureConnected() {
+  if (!connected) { connected = true; connect(); }
+}
 
+// Подписка на reload (без данных)
 export function onSSE(callback: () => void): () => void {
-  listeners.add(callback);
+  ensureConnected();
+  reloadListeners.add(callback);
+  return () => { reloadListeners.delete(callback); };
+}
 
-  if (!connected) {
-    connected = true;
-    connect();
-  }
-
-  return () => {
-    listeners.delete(callback);
-  };
+// Подписка на события с данными (для тостов)
+export function onSSEEvent(callback: (evt: SSEEvent) => void): () => void {
+  ensureConnected();
+  dataListeners.add(callback);
+  return () => { dataListeners.delete(callback); };
 }
