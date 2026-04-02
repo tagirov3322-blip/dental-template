@@ -54,6 +54,16 @@ export default function AdminBookings() {
 
   useEffect(() => { load(); }, [load]);
 
+  // SSE — realtime обновления
+  useEffect(() => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
+    const es = new EventSource(`${apiUrl.replace("/api", "")}/api/events`);
+    es.addEventListener("new_booking", () => load());
+    es.addEventListener("booking_updated", () => load());
+    es.addEventListener("booking_deleted", () => load());
+    return () => es.close();
+  }, [load]);
+
   const changeStatus = async (id: number, status: string) => {
     await api.put(`/bookings/${id}`, { status });
     load();
