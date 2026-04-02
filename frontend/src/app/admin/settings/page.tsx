@@ -46,10 +46,10 @@ export default function AdminSettings() {
   if (!settings) return <div className="text-gray-400">Загрузка...</div>;
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-[#2a3250]">Настройки</h1>
+    <div ref={containerRef}>
+      <h1 className="page-title text-2xl font-bold text-[#2a3250]">Настройки</h1>
 
-      <div className="mt-6 max-w-lg space-y-5 rounded-2xl bg-white p-6 shadow-sm">
+      <div className="page-content mt-6 max-w-lg space-y-5 rounded-2xl bg-white p-6 shadow-sm">
         <div>
           <label className="mb-1.5 block text-sm font-medium text-gray-700">Название клиники</label>
           <input value={settings.clinicName} onChange={(e) => setSettings({ ...settings, clinicName: e.target.value })}
