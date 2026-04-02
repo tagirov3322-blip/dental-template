@@ -110,7 +110,7 @@ export default function AdminBookings() {
 
   // SSE — realtime
   useEffect(() => {
-    return onSSE("*", () => loadRef.current());
+    return onSSE(() => loadRef.current());
   }, []);
 
   const changeStatus = async (id: number, status: string) => {
