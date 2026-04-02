@@ -71,9 +71,11 @@ export default function AdminDashboard() {
   ].filter((d) => d.value > 0);
 
   const weekDays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+  const today = new Date().getDay(); // 0=Вс, 1=Пн...
+  const todayIdx = today === 0 ? 6 : today - 1;
   const trendData = weekDays.map((day, i) => ({
     day,
-    value: i < 5 ? Math.max(0, stats.todayBookings + Math.floor(Math.random() * 3)) : 0,
+    value: i === todayIdx ? stats.todayBookings : 0,
   }));
 
   return (
