@@ -108,7 +108,7 @@ export default function AdminBookings() {
         ))}
       </div>
 
-      <div className="mt-6 overflow-hidden rounded-2xl bg-white shadow-sm">
+      <div className="page-content mt-6 overflow-hidden rounded-2xl bg-white shadow-sm">
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-gray-100 text-xs uppercase tracking-wider text-gray-500">
