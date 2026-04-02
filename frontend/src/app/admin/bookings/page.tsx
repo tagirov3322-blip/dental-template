@@ -124,7 +124,7 @@ export default function AdminBookings() {
           </thead>
           <tbody>
             {data?.bookings.map((b) => (
-              <tr key={b.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
+              <tr key={b.id} className="booking-row border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
                 <td className="px-5 py-3 font-medium text-gray-900">{b.patientName}</td>
                 <td className="px-5 py-3 text-gray-600">{b.phone}</td>
                 <td className="px-5 py-3 text-gray-600">{b.doctor.name.split(" ").slice(0, 2).join(" ")}</td>
