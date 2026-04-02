@@ -84,10 +84,10 @@ export default function AdminBookings() {
   };
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-[#2a3250]">Записи</h1>
+    <div ref={containerRef}>
+      <h1 className="page-title text-2xl font-bold text-[#2a3250]">Записи</h1>
 
-      <div className="mt-4 flex flex-wrap items-center gap-3">
+      <div className="page-controls mt-4 flex flex-wrap items-center gap-3">
         <input
           type="text"
           placeholder="Поиск по имени / телефону"
