@@ -23,6 +23,7 @@ export function initTelegramBot(): void {
         data: { status: "confirmed" },
         include: { doctor: true, service: true },
       });
+      broadcast("booking_updated", booking);
       await ctx.editMessageReplyMarkup(undefined);
       await ctx.reply(
         `✅ Запись #${bookingId} подтверждена\n` +
