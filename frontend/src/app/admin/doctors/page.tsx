@@ -82,7 +82,7 @@ export default function AdminDoctors() {
 
       <div className="page-content mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {doctors.map((d) => (
-          <div key={d.id} className="rounded-2xl bg-white p-5 shadow-sm">
+          <div key={d.id} className="doctor-card rounded-2xl bg-white p-5 shadow-sm">
             <div className="flex items-start gap-4">
               <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-gray-100">
                 {d.photo ? (
