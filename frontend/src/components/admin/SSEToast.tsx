@@ -28,12 +28,21 @@ export default function SSEToast() {
 
     const data = evt.data || {};
     let subtitle = "";
+    let color = config.color;
+
     if (evt.type === "new_booking") {
       const svcName = (data.service as Record<string, unknown>)?.name || "";
       subtitle = `${data.patientName || "Пациент"} — ${svcName}`;
     } else if (evt.type === "booking_updated") {
-      const labels: Record<string, string> = { new: "Новая", confirmed: "Подтверждена", completed: "Завершена", cancelled: "Отменена" };
-      subtitle = `${data.patientName || "Пациент"} → ${labels[data.status as string] || data.status}`;
+      const statusConfig: Record<string, { label: string; color: string }> = {
+        new: { label: "Новая", color: "#f59e0b" },
+        confirmed: { label: "Подтверждена", color: "#3b82f6" },
+        completed: { label: "Завершена", color: "#22c55e" },
+        cancelled: { label: "Отменена", color: "#ef4444" },
+      };
+      const sc = statusConfig[data.status as string];
+      subtitle = `${data.patientName || "Пациент"} → ${sc?.label || data.status}`;
+      if (sc) color = sc.color;
     } else {
       subtitle = "Запись удалена";
     }
