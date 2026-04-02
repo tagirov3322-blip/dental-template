@@ -37,8 +37,6 @@ const FALLBACK_PROMOTIONS: Promo[] = [
 ];
 
 export default function Promotions() {
-<<<<<<< HEAD
-  const sectionRef = useRef<HTMLElement>(null);
   const [promotions, setPromotions] = useState<Promo[]>(FALLBACK_PROMOTIONS);
 
   useEffect(() => {
@@ -55,9 +53,6 @@ export default function Promotions() {
       }
     }).catch(console.error);
   }, []);
-=======
-  
->>>>>>> 7425ed765e7c40b7f164e48d68af126d6c1a8ed4
 
 
   return (
