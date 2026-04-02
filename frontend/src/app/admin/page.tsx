@@ -140,29 +140,8 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Средняя строка — графики */}
+      {/* Статусы записей */}
       <div className="mt-6 grid grid-cols-3 gap-5">
-        {/* Популярные услуги */}
-        <div className="col-span-2 rounded-2xl bg-white p-6 shadow-sm">
-          <p className="mb-5 text-xs font-medium uppercase tracking-wider text-gray-400">Популярные услуги</p>
-          {stats.popularServices.length > 0 ? (
-            <ResponsiveContainer width="100%" height={280}>
-              <BarChart data={stats.popularServices} layout="vertical" margin={{ left: 0, right: 20 }} style={{ backgroundColor: "transparent" }}>
-                <XAxis type="number" tick={{ fontSize: 11, fill: "#9ca3af" }} axisLine={false} tickLine={false} />
-                <YAxis type="category" dataKey="serviceName" width={160} tick={{ fontSize: 12, fill: "#374151" }} axisLine={false} tickLine={false} />
-                <Tooltip
-                  contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 8px 30px rgba(0,0,0,0.08)", fontSize: 13 }}
-                  formatter={(value: number) => [`${value}`, "Записей"]}
-                />
-                <Bar dataKey="count" fill="#2a3250" radius={[0, 8, 8, 0]} barSize={28} />
-              </BarChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="flex h-[280px] items-center justify-center text-sm text-gray-300">Нет данных</div>
-          )}
-        </div>
-
-        {/* Статусы записей */}
         <div className="rounded-2xl bg-white p-6 shadow-sm">
           <p className="mb-5 text-xs font-medium uppercase tracking-wider text-gray-400">Статусы записей</p>
           {statusData.length > 0 ? (
