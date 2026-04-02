@@ -21,7 +21,7 @@ import {
 const navLinks = [
   { label: "О клинике", href: "#about" },
   { label: "Услуги", href: "#services" },
-  { label: "Специалисты", href: "#specialists" },
+  { label: "Специалисты", href: "#doctors" },
   { label: "Отзывы", href: "#reviews" },
   { label: "Контакты", href: "#contacts" },
 ];
