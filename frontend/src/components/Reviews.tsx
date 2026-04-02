@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { api } from "@/lib/api";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
@@ -14,23 +15,33 @@ interface Review {
   name: string;
   rating: number;
   text: string;
+  source?: string;
 }
 
-const reviews: Review[] = [
-  { id: 1, name: "Анна Соколова", rating: 5, text: "Прекрасная клиника! Делала виниры в IQ Dental — результат превзошёл все ожидания. Врачи внимательные, всё объясняют на каждом этапе. Теперь улыбаюсь без стеснения!" },
-  { id: 2, name: "Дмитрий Кузнецов", rating: 4, text: "Обратился с острой болью — приняли в тот же день. Лечение прошло быстро и безболезненно. Очень доволен сервисом и профессионализмом персонала IQ Dental." },
-  { id: 3, name: "Елена Васильева", rating: 5, text: "Проходила профессиональную чистку и отбеливание. Эффект потрясающий — зубы стали на несколько тонов светлее. Рекомендую IQ Dental всем знакомым!" },
-  { id: 4, name: "Михаил Петров", rating: 4, text: "Ставил имплант в IQ Dental. Процедура прошла комфортно, хотя я очень боялся. Врач подробно рассказал план лечения и поддерживал на каждом этапе. Спасибо!" },
-  { id: 5, name: "Ольга Новикова", rating: 5, text: "Лечим всей семьёй зубы только в IQ Dental. Детский стоматолог — просто волшебница, ребёнок идёт на приём с удовольствием. Современное оборудование и уютная атмосфера." },
-  { id: 6, name: "Артём Лебедев", rating: 4, text: "Исправлял прикус с помощью элайнеров. За полгода зубы встали ровно, как и обещали. Клиника IQ Dental оправдывает своё название — действительно умный подход к стоматологии." },
-  { id: 7, name: "Марина Козлова", rating: 5, text: "Очень боялась удалять зуб мудрости, но в IQ Dental всё прошло идеально. Никакой боли, быстрое восстановление. Благодарна врачам за профессионализм и заботу!" },
-  { id: 8, name: "Сергей Волков", rating: 4, text: "Делал протезирование в IQ Dental. Качество работы на высшем уровне — коронки выглядят как родные зубы. Отдельное спасибо за терпение и внимание к деталям." },
-  { id: 9, name: "Наталья Орлова", rating: 5, text: "Хожу в IQ Dental уже третий год на профилактические осмотры. Всегда приятная атмосфера, вежливый персонал и никаких очередей. Лучшая стоматология в городе!" },
-];
+interface ApiReview {
+  id: number;
+  authorName: string;
+  text: string;
+  rating: number;
+  source: string;
+}
 
-const firstColumn = reviews.slice(0, 3);
-const secondColumn = reviews.slice(3, 6);
-const thirdColumn = reviews.slice(6, 9);
+interface ReviewsResponse {
+  reviews: ApiReview[];
+  total: number;
+}
+
+const FALLBACK_REVIEWS: Review[] = [
+  { id: 1, name: "Анна Соколова", rating: 5, text: "Прекрасная клиника! Делала виниры в IQ Dental — результат превзошёл все ожидания." },
+  { id: 2, name: "Дмитрий Кузнецов", rating: 4, text: "Обратился с острой болью — приняли в тот же день. Лечение прошло быстро и безболезненно." },
+  { id: 3, name: "Елена Васильева", rating: 5, text: "Проходила профессиональную чистку и отбеливание. Эффект потрясающий!" },
+  { id: 4, name: "Михаил Петров", rating: 4, text: "Ставил имплант. Процедура прошла комфортно, хотя я очень боялся." },
+  { id: 5, name: "Ольга Новикова", rating: 5, text: "Лечим всей семьёй зубы только здесь. Детский стоматолог — просто волшебница!" },
+  { id: 6, name: "Артём Лебедев", rating: 4, text: "Исправлял прикус с помощью элайнеров. За полгода зубы встали ровно." },
+  { id: 7, name: "Марина Козлова", rating: 5, text: "Очень боялась удалять зуб мудрости, но всё прошло идеально." },
+  { id: 8, name: "Сергей Волков", rating: 4, text: "Делал протезирование. Коронки выглядят как родные зубы." },
+  { id: 9, name: "Наталья Орлова", rating: 5, text: "Хожу уже третий год. Всегда приятная атмосфера и никаких очередей." },
+];
 
 function StarRating({ rating, interactive = false, onRate }: { rating: number; interactive?: boolean; onRate?: (v: number) => void }) {
   return (
