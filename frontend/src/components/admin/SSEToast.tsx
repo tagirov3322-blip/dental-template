@@ -26,6 +26,9 @@ export default function SSEToast() {
     const config = EVENT_CONFIG[evt.type];
     if (!config) return;
 
+    // Звуковое уведомление
+    try { new Audio("/notification.wav").play(); } catch {}
+
     const data = evt.data || {};
     let subtitle = "";
     let color = config.color;
