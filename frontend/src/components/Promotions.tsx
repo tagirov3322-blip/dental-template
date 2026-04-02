@@ -1,55 +1,63 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { api } from "@/lib/api";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-const promotions = [
-  {
-    title: "Бесплатная консультация",
-    description: "Первичный осмотр, диагностика и составление плана лечения — бесплатно для всех новых пациентов клиники.",
-    badge: "Для новых пациентов",
-    deadline: null,
-    cta: "Записаться",
-    accent: "from-[#2a3250]/8 to-[#2a3250]/4",
-    border: "border-[#2a3250]/10",
-  },
-  {
-    title: "Профчистка –20%",
-    description: "Скидка 20% на комплексную профессиональную гигиену: ультразвук, Air-Flow, полировка и фторирование.",
-    badge: "Хит",
-    deadline: "30.06.2026",
-    cta: "Записаться",
-    accent: "from-slate-100 to-gray-100",
-    border: "border-slate-200",
-  },
-  {
-    title: "Имплантация под ключ от 35 000 ₽",
-    description: "Полный цикл имплантации: установка импланта, формирователь десны и металлокерамическая коронка по фиксированной цене.",
-    badge: "Ограниченное предложение",
-    deadline: "31.05.2026",
-    cta: "Узнать подробнее",
-    accent: "from-gray-100 to-slate-100",
-    border: "border-gray-200",
-  },
-  {
-    title: "Семейная скидка 10%",
-    description: "Приходите всей семьёй и получайте скидку 10% на все виды лечения при одновременном обращении от двух членов семьи.",
-    badge: "Бессрочно",
-    deadline: null,
-    cta: "Записаться",
-    accent: "from-[#2a3250]/6 to-[#2a3250]/3",
-    border: "border-[#2a3250]/8",
-  },
+interface ApiPromotion {
+  id: number;
+  title: string;
+  description: string | null;
+  isActive: boolean;
+  endDate: string | null;
+}
+
+interface Promo {
+  title: string;
+  description: string;
+  badge: string;
+  deadline: string | null;
+  cta: string;
+  accent: string;
+  border: string;
+}
+
+const ACCENTS = [
+  { accent: "from-[#2a3250]/8 to-[#2a3250]/4", border: "border-[#2a3250]/10" },
+  { accent: "from-slate-100 to-gray-100", border: "border-slate-200" },
+  { accent: "from-gray-100 to-slate-100", border: "border-gray-200" },
+  { accent: "from-[#2a3250]/6 to-[#2a3250]/3", border: "border-[#2a3250]/8" },
+];
+
+const FALLBACK_PROMOTIONS: Promo[] = [
+  { title: "Бесплатная консультация", description: "Первичный осмотр и составление плана лечения — бесплатно.", badge: "Для новых пациентов", deadline: null, cta: "Записаться", ...ACCENTS[0] },
+  { title: "Профчистка –20%", description: "Скидка 20% на комплексную профессиональную гигиену.", badge: "Хит", deadline: "30.06.2026", cta: "Записаться", ...ACCENTS[1] },
 ];
 
 export default function Promotions() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [promotions, setPromotions] = useState<Promo[]>(FALLBACK_PROMOTIONS);
+
+  useEffect(() => {
+    api.get<ApiPromotion[]>("/promotions").then((data) => {
+      if (data.length > 0) {
+        setPromotions(data.map((p, i) => ({
+          title: p.title,
+          description: p.description || "",
+          badge: p.endDate ? "Ограниченное предложение" : "Бессрочно",
+          deadline: p.endDate ? new Date(p.endDate).toLocaleDateString("ru-RU") : null,
+          cta: "Записаться",
+          ...ACCENTS[i % ACCENTS.length],
+        })));
+      }
+    }).catch(console.error);
+  }, []);
 
   useGSAP(() => {
     gsap.from(".promotions-heading", {
