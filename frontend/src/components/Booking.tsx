@@ -12,24 +12,18 @@ import { api } from "@/lib/api";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-const doctors = [
-  { id: "1", name: "Нигматуллин Марат Хамзаевич — Ортопед, директор" },
-  { id: "2", name: "Шайхелисламов Раушан Рафисович — Хирург-имплантолог" },
-  { id: "3", name: "Гумеров Артур Рафаэлевич — Ортопед" },
-  { id: "4", name: "Нигматуллина Лилия Марселевна — Терапевт" },
-  { id: "5", name: "Ногманов Фарид Флюрович — Хирург-имплантолог" },
-  { id: "6", name: "Гараев Альберт Радикович — Хирург-имплантолог" },
-  { id: "7", name: "Бакирова Диляра Фаритовна — Терапевт" },
-];
+interface ApiDoctor {
+  id: number;
+  name: string;
+  specialty: string;
+}
 
-const serviceCategories = [
-  { id: "therapy", name: "Терапия (лечение кариеса, пульпита)" },
-  { id: "surgery", name: "Хирургия (удаление, имплантация)" },
-  { id: "orthopedics", name: "Ортопедия (коронки, виниры, протезы)" },
-  { id: "hygiene", name: "Гигиена (чистка, отбеливание)" },
-  { id: "aesthetics", name: "Эстетика (реставрация зубов)" },
-  { id: "consultation", name: "Консультация" },
-];
+interface ApiService {
+  id: number;
+  name: string;
+  category: string | null;
+  price: number;
+}
 
 function generateTimeSlots(): string[] {
   const slots: string[] = [];
