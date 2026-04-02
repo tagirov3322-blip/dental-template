@@ -3,9 +3,6 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { api } from "@/lib/api";
 import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
-
-gsap.registerPlugin(useGSAP);
 
 interface Review {
   id: number;
@@ -27,21 +24,48 @@ interface ReviewsResponse {
 
 const SOURCE_LABELS: Record<string, string> = { site: "Сайт", "2gis": "2GIS", yandex: "Яндекс" };
 
+function Skeleton() {
+  return (
+    <div className="space-y-4">
+      {[1, 2, 3, 4].map((i) => (
+        <div key={i} className="animate-pulse rounded-2xl bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-2">
+            <div className="h-4 w-24 rounded bg-gray-200" />
+            <div className="h-4 w-12 rounded bg-gray-100" />
+            <div className="h-4 w-20 rounded bg-gray-100" />
+          </div>
+          <div className="mt-3 h-3 w-full rounded bg-gray-100" />
+          <div className="mt-2 h-3 w-3/4 rounded bg-gray-100" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function AdminReviews() {
   const [data, setData] = useState<ReviewsResponse | null>(null);
   const [filter, setFilter] = useState<string>("");
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(() => {
-    gsap.from(".page-title", { y: -20, opacity: 0, duration: 0.5, ease: "power2.out" });
-    gsap.from(".page-controls", { y: 20, opacity: 0, duration: 0.5, delay: 0.1, ease: "power2.out" });
-    gsap.from(".page-content", { y: 30, opacity: 0, duration: 0.6, delay: 0.2, ease: "power3.out" });
-  }, { scope: containerRef });
+  const [loading, setLoading] = useState(true);
+  const listRef = useRef<HTMLDivElement>(null);
 
   const load = useCallback(() => {
+    setLoading(true);
     const params = new URLSearchParams();
     if (filter) params.set("isApproved", filter);
-    api.get<ReviewsResponse>(`/reviews/all?${params}`).then(setData).catch(console.error);
+    api.get<ReviewsResponse>(`/reviews/all?${params}`).then((d) => {
+      setData(d);
+      setLoading(false);
+      // Анимируем карточки после рендера
+      requestAnimationFrame(() => {
+        if (listRef.current) {
+          gsap.fromTo(
+            listRef.current.querySelectorAll(".review-card"),
+            { y: 15, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.35, stagger: 0.04, ease: "power2.out" }
+          );
+        }
+      });
+    }).catch(console.error);
   }, [filter]);
 
   useEffect(() => { load(); }, [load]);
@@ -63,46 +87,50 @@ export default function AdminReviews() {
   };
 
   return (
-    <div ref={containerRef}>
-      <h1 className="page-title text-2xl font-bold text-[#2a3250]">Отзывы</h1>
+    <div>
+      <h1 className="text-2xl font-bold text-[#2a3250]">Отзывы</h1>
 
-      <div className="page-controls mt-4 flex gap-2">
+      <div className="mt-4 flex gap-2">
         {[{ v: "", l: "Все" }, { v: "false", l: "На модерации" }, { v: "true", l: "Одобренные" }].map((f) => (
           <button key={f.v} onClick={() => setFilter(f.v)}
-            className={`filter-btn rounded-xl px-4 py-2 text-sm font-medium transition ${filter === f.v ? "bg-[#2a3250] text-white" : "bg-white text-gray-600 hover:bg-gray-50"}`}>
+            className={`rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 ${filter === f.v ? "bg-[#2a3250] text-white shadow-md" : "bg-white text-gray-600 hover:bg-gray-50"}`}>
             {f.l}
           </button>
         ))}
       </div>
 
-      <div className="page-content mt-6 space-y-4">
-        {data?.reviews.map((r) => (
-          <div key={r.id} className="review-card rounded-2xl bg-white p-5 shadow-sm">
-            <div className="flex items-start justify-between">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-gray-900">{r.authorName}</span>
-                  <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500">{SOURCE_LABELS[r.source] || r.source}</span>
-                  <span className="text-sm text-yellow-500">{"★".repeat(r.rating)}{"☆".repeat(5 - r.rating)}</span>
+      <div className="mt-6">
+        {loading ? <Skeleton /> : (
+          <div ref={listRef} className="space-y-4">
+            {data?.reviews.map((r) => (
+              <div key={r.id} className="review-card rounded-2xl bg-white p-5 shadow-sm" style={{ opacity: 0 }}>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-gray-900">{r.authorName}</span>
+                      <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500">{SOURCE_LABELS[r.source] || r.source}</span>
+                      <span className="text-sm text-yellow-500">{"★".repeat(r.rating)}{"☆".repeat(5 - r.rating)}</span>
+                    </div>
+                    <p className="mt-2 text-sm text-gray-600">{r.text}</p>
+                    <p className="mt-2 text-xs text-gray-400">{new Date(r.createdAt).toLocaleDateString("ru-RU")}</p>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    {!r.isApproved ? (
+                      <button onClick={() => moderate(r.id, true)} className="rounded-lg bg-green-50 px-3 py-1.5 text-xs font-medium text-green-700 hover:bg-green-100 transition-colors">Одобрить</button>
+                    ) : (
+                      <button onClick={() => moderate(r.id, false)} className="rounded-lg bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-700 hover:bg-amber-100 transition-colors">Снять</button>
+                    )}
+                    <button onClick={() => toggleVisibility(r.id, !r.isVisible)} className="rounded-lg bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-100 transition-colors">
+                      {r.isVisible ? "Скрыть" : "Показать"}
+                    </button>
+                    <button onClick={() => remove(r.id)} className="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-100 transition-colors">Удалить</button>
+                  </div>
                 </div>
-                <p className="mt-2 text-sm text-gray-600">{r.text}</p>
-                <p className="mt-2 text-xs text-gray-400">{new Date(r.createdAt).toLocaleDateString("ru-RU")}</p>
               </div>
-              <div className="flex items-center gap-1">
-                {!r.isApproved ? (
-                  <button onClick={() => moderate(r.id, true)} className="rounded-lg bg-green-50 px-3 py-1.5 text-xs font-medium text-green-700 hover:bg-green-100">Одобрить</button>
-                ) : (
-                  <button onClick={() => moderate(r.id, false)} className="rounded-lg bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-700 hover:bg-amber-100">Снять</button>
-                )}
-                <button onClick={() => toggleVisibility(r.id, !r.isVisible)} className="rounded-lg bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-100">
-                  {r.isVisible ? "Скрыть" : "Показать"}
-                </button>
-                <button onClick={() => remove(r.id)} className="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-100">Удалить</button>
-              </div>
-            </div>
+            ))}
+            {data?.reviews.length === 0 && <p className="py-8 text-center text-gray-400">Отзывов нет</p>}
           </div>
-        ))}
-        {data?.reviews.length === 0 && <p className="py-8 text-center text-gray-400">Отзывов нет</p>}
+        )}
       </div>
     </div>
   );
