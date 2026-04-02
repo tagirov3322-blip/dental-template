@@ -151,10 +151,31 @@ const FALLBACK_SERVICES: Service[] = [
 ];
 
 export default function Services() {
-  const [activeCategory, setActiveCategory] = useState<Category>("Все");
+  const [activeCategory, setActiveCategory] = useState<string>("Все");
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [services, setServices] = useState<Service[]>(FALLBACK_SERVICES);
+  const [categories, setCategories] = useState<string[]>([]);
   const detailsRefs = useRef<Map<number, HTMLDivElement>>(new Map());
   const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    api.get<ApiService[]>("/services").then((data) => {
+      const mapped = data.map((s) => ({
+        id: s.id,
+        category: s.category || "Другое",
+        name: s.name,
+        description: s.description || "",
+        price: `${s.price.toLocaleString("ru-RU")} ₽`,
+        duration: `${s.duration} мин`,
+        details: s.description || "",
+      }));
+      if (mapped.length > 0) setServices(mapped);
+      const cats = [...new Set(mapped.map((s) => s.category))];
+      setCategories(cats);
+    }).catch(console.error);
+  }, []);
+
+  const categoryTabs = ["Все", ...categories];
 
   const filtered =
     activeCategory === "Все"
