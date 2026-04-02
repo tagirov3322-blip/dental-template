@@ -62,15 +62,15 @@ export default function AdminServices() {
   }, {});
 
   return (
-    <div>
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-[#2a3250]">Услуги</h1>
+    <div ref={containerRef}>
+      <div className="page-controls flex items-center justify-between">
+        <h1 className="page-title text-2xl font-bold text-[#2a3250]">Услуги</h1>
         <button onClick={() => setEditing({ name: "", price: 0, duration: 30, isActive: true })} className="rounded-xl bg-[#2a3250] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#353d5c]">
           Добавить
         </button>
       </div>
 
-      <div className="mt-6 space-y-6">
+      <div className="page-content mt-6 space-y-6">
         {Object.entries(grouped).map(([cat, items]) => (
           <div key={cat}>
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-400">{cat}</h2>
