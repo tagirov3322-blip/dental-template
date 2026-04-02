@@ -70,9 +70,21 @@ export default function AdminDashboard() {
   const [activePieIndex, setActivePieIndex] = useState(-1);
   const [pieHovered, setPieHovered] = useState(false);
 
-  useEffect(() => {
+  const loadDashboard = () => {
     api.get<Stats>("/stats").then(setStats).catch(console.error);
     api.get<BookingsResponse>("/bookings?limit=7").then((d) => setRecentBookings(d.bookings)).catch(console.error);
+  };
+
+  useEffect(() => { loadDashboard(); }, []);
+
+  // SSE — realtime
+  useEffect(() => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
+    const es = new EventSource(`${apiUrl.replace("/api", "")}/api/events`);
+    es.addEventListener("new_booking", () => loadDashboard());
+    es.addEventListener("booking_updated", () => loadDashboard());
+    es.addEventListener("booking_deleted", () => loadDashboard());
+    return () => es.close();
   }, []);
 
   if (!stats) return <div className="flex h-96 items-center justify-center text-gray-400">Загрузка...</div>;
