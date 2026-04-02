@@ -75,10 +75,14 @@ export default function AdminDashboard() {
   // GSAP entrance animations
   useGSAP(() => {
     if (!stats) return;
-    gsap.from(".dash-card", { y: 30, opacity: 0, duration: 0.6, stagger: 0.1, ease: "power3.out" });
-    gsap.from(".dash-chart", { y: 40, opacity: 0, duration: 0.8, delay: 0.3, stagger: 0.15, ease: "power3.out" });
-    gsap.from(".dash-table", { y: 40, opacity: 0, duration: 0.8, delay: 0.5, ease: "power3.out" });
     gsap.from(".dash-header", { y: -20, opacity: 0, duration: 0.5, ease: "power2.out" });
+    gsap.from(".dash-card", { y: 30, opacity: 0, scale: 0.95, duration: 0.6, stagger: 0.12, ease: "power3.out", delay: 0.1 });
+    gsap.from(".dash-stat-row", { x: -15, opacity: 0, duration: 0.4, stagger: 0.06, delay: 0.5, ease: "power2.out" });
+    gsap.from(".dash-mini-stat", { y: 10, opacity: 0, duration: 0.4, stagger: 0.08, delay: 0.4, ease: "power2.out" });
+    gsap.from(".dash-pie", { scale: 0, opacity: 0, duration: 0.8, delay: 0.6, ease: "back.out(1.4)", transformOrigin: "center center" });
+    gsap.from(".dash-legend-item", { x: 20, opacity: 0, duration: 0.4, stagger: 0.08, delay: 0.8, ease: "power2.out" });
+    gsap.from(".dash-table", { y: 40, opacity: 0, duration: 0.7, delay: 0.5, ease: "power3.out" });
+    gsap.from(".dash-table-row", { x: -20, opacity: 0, duration: 0.4, stagger: 0.06, delay: 0.7, ease: "power2.out" });
   }, { scope: containerRef, dependencies: [!!stats] });
 
   if (!stats) return <div className="flex h-96 items-center justify-center text-gray-400">Загрузка...</div>;
