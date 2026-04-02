@@ -1,29 +1,62 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
 
-async function request<T>(
-  endpoint: string,
-  options: RequestInit = {}
-): Promise<T> {
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+function getTokens() {
+  if (typeof window === "undefined") return { access: null, refresh: null };
+  return {
+    access: localStorage.getItem("accessToken"),
+    refresh: localStorage.getItem("refreshToken"),
+  };
+}
 
-  const headers: HeadersInit = {
+function setTokens(access: string, refresh: string) {
+  localStorage.setItem("accessToken", access);
+  localStorage.setItem("refreshToken", refresh);
+}
+
+export function clearTokens() {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+}
+
+export function isAuthenticated() {
+  return typeof window !== "undefined" && !!localStorage.getItem("accessToken");
+}
+
+async function refreshAccessToken(): Promise<boolean> {
+  const { refresh } = getTokens();
+  if (!refresh) return false;
+  try {
+    const res = await fetch(`${API_URL}/auth/refresh`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken: refresh }),
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    setTokens(data.accessToken, data.refreshToken);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function request<T>(endpoint: string, options: RequestInit = {}, retry = true): Promise<T> {
+  const { access } = getTokens();
+
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    ...options.headers,
+    ...(options.headers as Record<string, string>),
   };
 
-  if (token) {
-    (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
-  }
+  if (access) headers["Authorization"] = `Bearer ${access}`;
 
-  const res = await fetch(`${API_URL}${endpoint}`, {
-    ...options,
-    headers,
-  });
+  const res = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
 
-  if (res.status === 401 && typeof window !== "undefined") {
-    localStorage.removeItem("token");
-    window.location.href = "/admin/login";
+  if (res.status === 401 && retry) {
+    const refreshed = await refreshAccessToken();
+    if (refreshed) return request<T>(endpoint, options, false);
+    clearTokens();
+    if (typeof window !== "undefined") window.location.href = "/admin/login";
     throw new Error("Unauthorized");
   }
 
@@ -43,18 +76,29 @@ export const api = {
     request<T>(endpoint, { method: "PUT", body: JSON.stringify(data) }),
   delete: <T>(endpoint: string) =>
     request<T>(endpoint, { method: "DELETE" }),
+
+  login: async (login: string, password: string) => {
+    const res = await fetch(`${API_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ login, password }),
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || "Ошибка входа");
+    }
+    const data = await res.json();
+    setTokens(data.accessToken, data.refreshToken);
+    return data;
+  },
+
   upload: async (file: File) => {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const { access } = getTokens();
     const formData = new FormData();
     formData.append("file", file);
-    const headers: HeadersInit = {};
-    if (token) headers["Authorization"] = `Bearer ${token}`;
-    const res = await fetch(`${API_URL}/upload`, {
-      method: "POST",
-      headers,
-      body: formData,
-    });
+    const headers: Record<string, string> = {};
+    if (access) headers["Authorization"] = `Bearer ${access}`;
+    const res = await fetch(`${API_URL}/upload`, { method: "POST", headers, body: formData });
     if (!res.ok) throw new Error("Upload failed");
     return res.json() as Promise<{ url: string }>;
   },
