@@ -4,7 +4,7 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { MapPin, Clock, Shield, Sparkles } from "lucide-react";
+import { MapPin, Clock, Shield, Sparkles, Monitor, Scan, Cpu, Zap } from "lucide-react";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
