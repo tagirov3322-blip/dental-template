@@ -27,8 +27,7 @@ const SOURCE_LABELS: Record<string, string> = { site: "Сайт", "2gis": "2GIS"
 export default function AdminReviews() {
   const [data, setData] = useState<ReviewsResponse | null>(null);
   const [filter, setFilter] = useState<string>("");
-  const [firstLoad, setFirstLoad] = useState(true);
-  const listRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(10);
 
   const load = useCallback(() => {
     const params = new URLSearchParams();
