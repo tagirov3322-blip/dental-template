@@ -98,6 +98,11 @@ export default function AdminReviews() {
           </div>
         ))}
         {data.reviews.length === 0 && <p className="py-8 text-center text-gray-400">Отзывов нет</p>}
+        {visible < data.reviews.length && (
+          <button onClick={() => setVisible((v) => v + 10)} className="w-full rounded-xl bg-gray-50 py-3 text-sm font-medium text-gray-500 hover:bg-gray-100 transition-colors">
+            Показать ещё ({data.reviews.length - visible})
+          </button>
+        )}
       </div>
     </div>
   );
