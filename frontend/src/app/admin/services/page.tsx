@@ -28,7 +28,25 @@ export default function AdminServices() {
     gsap.from(".page-content", { y: 30, opacity: 0, duration: 0.6, delay: 0.2, ease: "power3.out" });
   }, { scope: containerRef });
 
-  const load = () => api.get<Service[]>("/services?active=false").then(setServices);
+  const [loading, setLoading] = useState(true);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const load = () => {
+    setLoading(true);
+    api.get<Service[]>("/services?active=false").then((data) => {
+      setServices(data);
+      setLoading(false);
+      requestAnimationFrame(() => {
+        if (listRef.current) {
+          gsap.fromTo(
+            listRef.current.querySelectorAll(".service-row"),
+            { x: -20, opacity: 0 },
+            { x: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power2.out" }
+          );
+        }
+      });
+    });
+  };
   useEffect(() => { load(); }, []);
 
   const save = async () => {
