@@ -159,6 +159,55 @@ export default function About() {
               </div>
             </div>
 
+            {/* Оборудование */}
+            <div
+              className="about-text-item mt-10 rounded-2xl border border-white/10 bg-white/5 p-6"
+              style={{ opacity: 0, transform: "translateY(30px)" }}
+            >
+              <p className="text-sm font-semibold uppercase tracking-wider text-white/50">Оборудование</p>
+              <p className="mt-3 text-base leading-relaxed text-white/80">
+                Клиника оснащена <span className="font-semibold text-white">новейшим оборудованием</span> ведущих мировых производителей для точной диагностики и безболезненного лечения.
+              </p>
+              <div className="mt-5 grid grid-cols-2 gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10">
+                    <Scan className="h-4 w-4 text-white/80" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white">КТ Vatech</p>
+                    <p className="text-xs text-white/50">3D-томограф</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10">
+                    <Monitor className="h-4 w-4 text-white/80" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white">Визиограф</p>
+                    <p className="text-xs text-white/50">Цифровые снимки</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10">
+                    <Cpu className="h-4 w-4 text-white/80" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white">Osstem</p>
+                    <p className="text-xs text-white/50">Импланты Корея</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10">
+                    <Zap className="h-4 w-4 text-white/80" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white">Диодный лазер</p>
+                    <p className="text-xs text-white/50">Безболезненно</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <a
               href="#services"
               className="about-text-item mt-8 inline-flex h-12 items-center gap-2 rounded-full bg-white px-8 text-sm font-semibold tracking-[0.02em] text-[#1a1f2e] transition-all duration-300 hover:scale-[1.03] hover:bg-white/90 active:scale-[0.98]"
