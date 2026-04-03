@@ -127,6 +127,8 @@ export default function AdminServices() {
             </div>
           </div>
         ))}
+        </div>
+        )}
       </div>
 
       {editing && (
