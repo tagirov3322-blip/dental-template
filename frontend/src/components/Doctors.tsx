@@ -385,7 +385,7 @@ export default function Doctors() {
                   onClick={() => setShowAll((v) => !v)}
                   className="rounded-full border border-primary/20 bg-white px-8 py-3 text-sm font-semibold text-primary transition-all duration-300 hover:bg-primary hover:text-white hover:border-primary"
                 >
-                  {showAll ? "Скрыть" : `Показать всех (${doctors.length})`}
+                  {showAll ? "Скрыть" : "Показать всех"}
                 </button>
               </div>
             </>
