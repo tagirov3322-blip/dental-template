@@ -57,7 +57,7 @@ export default function Promotions() {
 
 
   return (
-    <section id="promotions" className="relative bg-background pb-28 pt-16 sm:pt-20">
+    <section id="promotions" className="relative bg-background dark:bg-transparent pb-28 pt-16 sm:pt-20">
       {/* Accent orb */}
       <div className="pointer-events-none absolute right-1/4 top-0 h-80 w-80 rounded-full bg-primary/4 blur-3xl" aria-hidden="true" />
 
