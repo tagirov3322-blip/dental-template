@@ -53,7 +53,8 @@ interface FormErrors {
 }
 
 function validatePhone(phone: string): boolean {
-  return /^\+7\d{10}$/.test(phone.replace(/[\s\-()]/g, ""));
+  const clean = phone.replace(/[\s\-()]/g, "");
+  return /^(\+7|7|8)\d{10}$/.test(clean);
 }
 
 export default function Booking() {
