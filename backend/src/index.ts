@@ -67,6 +67,10 @@ app.use((req, _res, next) => {
   next();
 });
 
+// Rate limiters на POST
+app.post("/api/bookings", bookingLimiter);
+app.post("/api/reviews", reviewLimiter);
+
 // Роуты
 app.use("/api/auth", authRoutes);
 app.use("/api/doctors", doctorsRoutes);
