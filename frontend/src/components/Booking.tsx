@@ -255,7 +255,7 @@ export default function Booking() {
             <form
               onSubmit={handleSubmit}
               noValidate
-              className="relative flex-1 flex flex-col justify-center rounded-3xl bg-card p-8 shadow-2xl shadow-black/20 sm:p-10 lg:p-12"
+              className="relative flex-1 flex flex-col justify-center rounded-3xl bg-card p-5 shadow-2xl shadow-black/20 sm:p-8 lg:p-12"
             >
               {/* Inner glass accent */}
               <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/5 blur-2xl" />
