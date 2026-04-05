@@ -65,31 +65,35 @@ function getInitials(name: string) {
   return name.split(" ").map((w) => w[0]).join("").toUpperCase();
 }
 
-function TestimonialsColumn({ testimonials, className, pixelsPerSecond = 20 }: { testimonials: Review[]; className?: string; pixelsPerSecond?: number }) {
+function TestimonialsColumn({ testimonials, className, speed = 40 }: { testimonials: Review[]; className?: string; speed?: number }) {
   const columnRef = useRef<HTMLDivElement>(null);
-  const [animDuration, setAnimDuration] = useState(30);
+  const [duration, setDuration] = useState(0);
 
   useEffect(() => {
-    if (!columnRef.current) return;
-    // Считаем высоту одного набора карточек
-    const height = columnRef.current.scrollHeight / 2;
-    setAnimDuration(height / pixelsPerSecond);
-  }, [testimonials, pixelsPerSecond]);
+    // Ждём рендер, потом считаем высоту
+    const timer = setTimeout(() => {
+      if (columnRef.current) {
+        const h = columnRef.current.scrollHeight / 2;
+        setDuration(h > 0 ? h / speed : 40);
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [testimonials, speed]);
 
   return (
     <div className={cn("overflow-hidden", className)}>
       <div
         ref={columnRef}
-        className="flex flex-col gap-6 pb-6"
-        style={{
-          animation: `scroll-up ${animDuration}s linear infinite`,
+        className="flex flex-col"
+        style={duration > 0 ? {
+          animation: `scroll-up ${duration}s linear infinite`,
           willChange: "transform",
-        }}
+        } : undefined}
       >
         {[0, 1].map((index) => (
           <React.Fragment key={index}>
             {testimonials.map((review) => (
-              <div key={`${index}-${review.id}`} className="liquid-glass-dark w-full max-w-xs rounded-2xl p-6 mb-6 last:mb-0">
+              <div key={`${index}-${review.id}`} className="liquid-glass-dark w-full max-w-xs rounded-2xl p-6 mb-6">
                 <StarRating rating={review.rating} />
                 <p className="mt-4 text-sm leading-relaxed text-white/70">{review.text}</p>
                 <div className="mt-5 flex items-center gap-3">
