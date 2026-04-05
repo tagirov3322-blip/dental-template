@@ -17,7 +17,7 @@ function connect() {
   if (es) { es.close(); es = null; }
 
   es = new EventSource(SSE_URL);
-  es.onopen = () => console.log("[SSE] connected");
+  es.onopen = () => {};
   es.onerror = () => {
     if (es?.readyState === EventSource.CLOSED) {
       es = null;
