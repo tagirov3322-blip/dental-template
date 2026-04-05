@@ -107,8 +107,8 @@ export default function AdminSchedule() {
                   : "bg-white text-gray-700 hover:bg-gray-50"
               }`}
             >
-              <p className="text-sm font-semibold">{doc.name.split(" ").slice(0, 2).join(" ")}</p>
-              <p className={`mt-0.5 text-xs ${selectedId === doc.id ? "text-white/60" : "text-gray-400"}`}>{doc.specialty}</p>
+              <p className="text-base font-semibold">{doc.name.split(" ").slice(0, 2).join(" ")}</p>
+              <p className={`mt-1 text-sm ${selectedId === doc.id ? "text-white/60" : "text-gray-400"}`}>{doc.specialty}</p>
             </button>
           ))}
         </div>
