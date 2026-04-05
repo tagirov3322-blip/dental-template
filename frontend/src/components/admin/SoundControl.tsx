@@ -33,7 +33,10 @@ export default function SoundControl() {
   const changeVolume = (v: number) => {
     setVolume(v);
     setSoundVolume(v);
-    if (v > 0 && enabled) playNotification();
+  };
+
+  const previewSound = () => {
+    if (volume > 0 && enabled) playNotification();
   };
 
   return (
