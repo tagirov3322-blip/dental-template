@@ -75,6 +75,8 @@ export default function SoundControl() {
                 step={5}
                 value={volume}
                 onChange={(e) => changeVolume(Number(e.target.value))}
+                onMouseUp={previewSound}
+                onTouchEnd={previewSound}
                 className="w-full accent-[#2a3250]"
               />
               <div className="flex justify-between text-[10px] text-gray-400 mt-0.5">
