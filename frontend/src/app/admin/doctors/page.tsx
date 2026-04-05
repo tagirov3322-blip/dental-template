@@ -169,6 +169,7 @@ export default function AdminDoctors() {
                     {editing.photo && (
                       <button onClick={() => setEditing({ ...editing, photo: null })} className="text-xs text-red-500 hover:text-red-700">Удалить фото</button>
                     )}
+                    {uploadError && <p className="text-xs text-red-500">{uploadError}</p>}
                   </div>
                 </div>
               </div>
