@@ -42,13 +42,13 @@ export default function ToothOverlay() {
 
     // Parallax scroll
     gsap.to(".hero-tooth-scroll", {
-      y: "-55%",
+      y: "-120%",
       ease: "none",
       scrollTrigger: {
         trigger: ref.current,
-        start: "top top",
-        end: "bottom top",
-        scrub: 1.5,
+        start: "top 80%",
+        end: "center top",
+        scrub: 0.8,
       },
     });
   };
