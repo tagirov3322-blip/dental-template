@@ -26,46 +26,46 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#f8f9fb]">
+    <div className="flex min-h-screen items-center justify-center bg-background">
       <div className="w-full max-w-sm">
-        <div className="rounded-2xl bg-white p-8 shadow-lg shadow-black/5">
+        <div className="rounded-2xl bg-card p-8 shadow-lg shadow-black/5">
           <div className="mb-8 text-center">
-            <h1 className="text-2xl font-bold text-[#2a3250]">IQ Dental</h1>
-            <p className="mt-2 text-sm text-gray-500">Вход в панель управления</p>
+            <h1 className="text-2xl font-bold text-foreground">IQ Dental</h1>
+            <p className="mt-2 text-sm text-muted-foreground">Вход в панель управления</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-700">Логин</label>
+              <label className="mb-1.5 block text-sm font-medium text-foreground">Логин</label>
               <input
                 type="text"
                 value={login}
                 onChange={(e) => setLogin(e.target.value)}
-                className="w-full rounded-xl border border-gray-200 bg-[#f8f9fb] px-4 py-3 text-sm outline-none transition focus:border-[#2a3250] focus:ring-2 focus:ring-[#2a3250]/10"
+                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
                 placeholder="admin"
                 required
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-700">Пароль</label>
+              <label className="mb-1.5 block text-sm font-medium text-foreground">Пароль</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-xl border border-gray-200 bg-[#f8f9fb] px-4 py-3 text-sm outline-none transition focus:border-[#2a3250] focus:ring-2 focus:ring-[#2a3250]/10"
+                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
                 placeholder="Пароль"
                 required
               />
             </div>
 
             {error && (
-              <div className="rounded-lg bg-red-50 px-4 py-2.5 text-sm text-red-600">{error}</div>
+              <div className="rounded-lg bg-red-50 px-4 py-2.5 text-sm text-red-600 dark:bg-red-950 dark:text-red-400">{error}</div>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl bg-[#2a3250] py-3 text-sm font-semibold text-white transition hover:bg-[#353d5c] disabled:opacity-50"
+              className="w-full rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-50"
             >
               {loading ? "Вход..." : "Войти"}
             </button>
