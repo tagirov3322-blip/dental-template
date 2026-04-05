@@ -128,7 +128,8 @@ export default function Booking() {
     if (Object.keys(errs).length > 0) return;
     setIsSubmitting(true);
     try {
-      await api.post("/bookings", { patientName: patientName.trim(), phone: phone.trim(), doctorId: Number(doctorId), serviceId: Number(serviceId), date, time, consentGiven });
+      const cleanPhone = phone.replace(/[\s\-()]/g, "").replace(/^8/, "+7").replace(/^7/, "+7").replace(/^\+\+/, "+");
+      await api.post("/bookings", { patientName: patientName.trim(), phone: cleanPhone, doctorId: Number(doctorId), serviceId: Number(serviceId), date, time, consentGiven });
       setSuccessMessage("Заявка отправлена! Мы скоро свяжемся с вами");
       setPatientName(""); setPhone(""); setDoctorId(""); setServiceId(""); setDate(""); setTime(""); setConsentGiven(false); setErrors({});
     } catch (err: unknown) {
