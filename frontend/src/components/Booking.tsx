@@ -16,6 +16,7 @@ interface ApiDoctor {
   id: number;
   name: string;
   specialty: string;
+  schedule: Record<string, { start: string; end: string }> | null;
 }
 
 interface ApiService {
@@ -24,6 +25,13 @@ interface ApiService {
   category: string | null;
   price: number;
 }
+
+interface OccupiedSlot {
+  time: string;
+  duration: number;
+}
+
+const DAY_KEYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 
 function generateTimeSlots(): string[] {
   const slots: string[] = [];
@@ -35,7 +43,40 @@ function generateTimeSlots(): string[] {
   return slots;
 }
 
-const timeSlots = generateTimeSlots();
+const ALL_TIME_SLOTS = generateTimeSlots();
+
+function isSlotOccupied(slot: string, occupied: OccupiedSlot[], serviceDuration: number): boolean {
+  const slotNum = Number(slot.replace(":", ""));
+  const slotEnd = slotNum + Math.floor(serviceDuration / 60) * 100 + (serviceDuration % 60);
+  return occupied.some((o) => {
+    const oStart = Number(o.time.replace(":", ""));
+    const oEnd = oStart + Math.floor(o.duration / 60) * 100 + (o.duration % 60);
+    return slotNum < oEnd && slotEnd > oStart;
+  });
+}
+
+function getAvailableSlots(
+  schedule: Record<string, { start: string; end: string }> | null,
+  dateStr: string,
+  occupied: OccupiedSlot[],
+  serviceDuration: number
+): string[] {
+  if (!schedule || !dateStr) return ALL_TIME_SLOTS;
+  const dayIndex = new Date(dateStr).getDay();
+  const dayKey = DAY_KEYS[dayIndex];
+  const daySchedule = schedule[dayKey];
+  if (!daySchedule) return [];
+  return ALL_TIME_SLOTS.filter((slot) => {
+    if (slot < daySchedule.start || slot >= daySchedule.end) return false;
+    return !isSlotOccupied(slot, occupied, serviceDuration);
+  });
+}
+
+function isDayAvailable(schedule: Record<string, { start: string; end: string }> | null, dateStr: string): boolean {
+  if (!schedule) return true;
+  const dayIndex = new Date(dateStr).getDay();
+  return !!schedule[DAY_KEYS[dayIndex]];
+}
 
 function getTodayString(): string {
   const d = new Date();
