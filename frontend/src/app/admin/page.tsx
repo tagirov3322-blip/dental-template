@@ -5,6 +5,7 @@ import { api } from "@/lib/api";
 import { onSSE } from "@/lib/sse";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { useTheme } from "next-themes";
 import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer, AreaChart, Area, Sector,
 } from "recharts";
@@ -12,12 +13,12 @@ import {
 gsap.registerPlugin(useGSAP);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function renderActiveShape(props: any) {
-  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload, value } = props;
+function RenderActiveShape(props: any) {
+  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload, value, isDark } = props;
   return (
     <g>
       <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius + 4} startAngle={startAngle} endAngle={endAngle} fill={fill} />
-      <text x={cx} y={cy - 4} textAnchor="middle" fill="#2a3250" fontSize={17} fontWeight={700}>{value}</text>
+      <text x={cx} y={cy - 4} textAnchor="middle" fill={isDark ? "#e4e7ec" : "#2a3250"} fontSize={17} fontWeight={700}>{value}</text>
       <text x={cx} y={cy + 11} textAnchor="middle" fill="#9ca3af" fontSize={9}>{payload.name}</text>
     </g>
   );
@@ -60,6 +61,8 @@ export default function AdminDashboard() {
   const [activePieIndex, setActivePieIndex] = useState(-1);
   const [pieHovered, setPieHovered] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
   const loadDashboard = () => {
     api.get<Stats>("/stats").then(setStats).catch(console.error);
@@ -85,7 +88,7 @@ export default function AdminDashboard() {
     gsap.from(".dash-table-row", { x: -20, opacity: 0, duration: 0.4, stagger: 0.06, delay: 0.7, ease: "power2.out" });
   }, { scope: containerRef });
 
-  if (!stats) return <div className="flex h-96 items-center justify-center text-gray-400">Загрузка...</div>;
+  if (!stats) return <div className="flex h-96 items-center justify-center text-muted-foreground">Загрузка...</div>;
 
   const statusData = [
     { name: "Новые", value: stats.newBookings },
@@ -99,60 +102,62 @@ export default function AdminDashboard() {
   const todayIdx = today === 0 ? 6 : today - 1;
   const trendData = weekDays.map((day, i) => ({ day, value: i === todayIdx ? stats.todayBookings : 0 }));
 
+  const chartColor = isDark ? "#8b9cc7" : "#2a3250";
+
   return (
     <div ref={containerRef}>
       <div className="dash-header mb-8 flex items-end justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[#2a3250]">Дашборд</h1>
-          <p className="mt-1 text-sm text-gray-400">Общая статистика клиники</p>
+          <h1 className="text-2xl font-bold text-foreground">Дашборд</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Общая статистика клиники</p>
         </div>
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-muted-foreground">
           {new Date().toLocaleDateString("ru-RU", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
         </p>
       </div>
 
       <div className="grid grid-cols-12 gap-5">
-        <div className="dash-card col-span-3 rounded-2xl bg-white p-6 shadow-sm">
-          <p className="text-[11px] font-medium uppercase tracking-wider text-gray-400">Всего записей</p>
-          <p className="mt-3 text-5xl font-bold text-[#2a3250]">{stats.totalBookings}</p>
+        <div className="dash-card col-span-3 rounded-2xl bg-card p-6 shadow-sm">
+          <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Всего записей</p>
+          <p className="mt-3 text-5xl font-bold text-foreground">{stats.totalBookings}</p>
           <div className="mt-4 space-y-1.5">
             {[{ label: "Новые", value: stats.newBookings, color: "#f59e0b" }, { label: "Подтверждённые", value: stats.confirmedBookings, color: "#3b82f6" }, { label: "Завершённые", value: stats.completedBookings, color: "#22c55e" }, { label: "Отменённые", value: stats.cancelledBookings, color: "#ef4444" }].map((s) => (
               <div key={s.label} className="dash-stat-row flex items-center justify-between text-xs">
-                <span className="flex items-center gap-1.5 text-gray-500"><span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: s.color }} />{s.label}</span>
-                <span className="font-semibold text-[#2a3250]">{s.value}</span>
+                <span className="flex items-center gap-1.5 text-muted-foreground"><span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: s.color }} />{s.label}</span>
+                <span className="font-semibold text-foreground">{s.value}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="dash-card col-span-5 rounded-2xl bg-white p-6 shadow-sm">
+        <div className="dash-card col-span-5 rounded-2xl bg-card p-6 shadow-sm">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-[11px] font-medium uppercase tracking-wider text-gray-400">Записей сегодня</p>
-              <p className="mt-3 text-5xl font-bold text-[#2a3250]">{stats.todayBookings}</p>
+              <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Записей сегодня</p>
+              <p className="mt-3 text-5xl font-bold text-foreground">{stats.todayBookings}</p>
             </div>
             <div className="grid grid-cols-3 gap-x-6 gap-y-2 text-right">
               {[{ l: "Врачей", v: stats.totalDoctors }, { l: "Услуг", v: stats.totalServices }, { l: "Отзывов", v: stats.totalReviews }].map((d) => (
-                <div key={d.l} className="dash-mini-stat"><p className="text-[10px] uppercase tracking-wider text-gray-400">{d.l}</p><p className="text-lg font-bold text-[#2a3250]">{d.v}</p></div>
+                <div key={d.l} className="dash-mini-stat"><p className="text-[10px] uppercase tracking-wider text-muted-foreground">{d.l}</p><p className="text-lg font-bold text-foreground">{d.v}</p></div>
               ))}
             </div>
           </div>
           <div className="mt-4 h-20">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={trendData}><Area type="monotone" dataKey="value" stroke="#2a3250" fill="#2a3250" fillOpacity={0.06} strokeWidth={2} dot={false} /></AreaChart>
+              <AreaChart data={trendData}><Area type="monotone" dataKey="value" stroke={chartColor} fill={chartColor} fillOpacity={0.06} strokeWidth={2} dot={false} /></AreaChart>
             </ResponsiveContainer>
           </div>
-          <div className="mt-1 flex justify-between text-[10px] text-gray-300">{weekDays.map((d) => <span key={d}>{d}</span>)}</div>
+          <div className="mt-1 flex justify-between text-[10px] text-muted-foreground/50">{weekDays.map((d) => <span key={d}>{d}</span>)}</div>
         </div>
 
-        <div className="dash-card col-span-4 rounded-2xl bg-white p-6 shadow-sm">
-          <p className="text-[11px] font-medium uppercase tracking-wider text-gray-400">Статусы записей</p>
+        <div className="dash-card col-span-4 rounded-2xl bg-card p-6 shadow-sm">
+          <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Статусы записей</p>
           {statusData.length > 0 ? (
             <div className="flex items-center gap-4">
               <div className="dash-pie h-40 w-40 shrink-0" style={{ transform: pieHovered ? "scale(1.15)" : "scale(1)", transition: "transform 1.2s cubic-bezier(0.22, 1, 0.36, 1)", transformOrigin: "center center", willChange: "transform" }} onMouseEnter={() => setPieHovered(true)} onMouseLeave={() => { setPieHovered(false); setActivePieIndex(-1); }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
-                    <Pie data={statusData} cx="50%" cy="50%" innerRadius={40} outerRadius={65} paddingAngle={3} dataKey="value" stroke="none" activeShape={renderActiveShape} onMouseEnter={(_, i) => setActivePieIndex(i)} onMouseLeave={() => setActivePieIndex(-1)}>
+                    <Pie data={statusData} cx="50%" cy="50%" innerRadius={40} outerRadius={65} paddingAngle={3} dataKey="value" stroke="none" activeShape={(props: any) => <RenderActiveShape {...props} isDark={isDark} />} onMouseEnter={(_, i) => setActivePieIndex(i)} onMouseLeave={() => setActivePieIndex(-1)}>
                       {statusData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} style={{ cursor: "pointer" }} />)}
                     </Pie>
                   </PieChart>
@@ -161,38 +166,38 @@ export default function AdminDashboard() {
               <div className="flex-1 space-y-2.5">
                 {statusData.map((d, i) => (
                   <div key={d.name} className="dash-legend-item flex items-center justify-between">
-                    <span className="flex items-center gap-2 text-xs text-gray-500"><span className="h-2.5 w-2.5 rounded" style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }} />{d.name}</span>
-                    <span className="text-sm font-bold text-[#2a3250]">{d.value}</span>
+                    <span className="flex items-center gap-2 text-xs text-muted-foreground"><span className="h-2.5 w-2.5 rounded" style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }} />{d.name}</span>
+                    <span className="text-sm font-bold text-foreground">{d.value}</span>
                   </div>
                 ))}
               </div>
             </div>
           ) : (
-            <div className="mt-6 text-center text-sm text-gray-300">Нет записей</div>
+            <div className="mt-6 text-center text-sm text-muted-foreground/50">Нет записей</div>
           )}
-          {stats.pendingReviews > 0 && <div className="mt-4 rounded-xl bg-amber-50 px-3 py-2 text-xs font-medium text-amber-600">{stats.pendingReviews} отзывов ждут модерации</div>}
+          {stats.pendingReviews > 0 && <div className="mt-4 rounded-xl bg-amber-50 px-3 py-2 text-xs font-medium text-amber-600 dark:bg-amber-950 dark:text-amber-400">{stats.pendingReviews} отзывов ждут модерации</div>}
         </div>
       </div>
 
       {/* Последние записи */}
-      <div className="dash-table mt-6 rounded-2xl bg-white shadow-sm">
-        <div className="px-6 py-5"><p className="text-[11px] font-medium uppercase tracking-wider text-gray-400">Последние записи</p></div>
+      <div className="dash-table mt-6 rounded-2xl bg-card shadow-sm">
+        <div className="px-6 py-5"><p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Последние записи</p></div>
         {recentBookings.length > 0 ? (
           <table className="w-full text-left text-sm">
-            <thead><tr className="border-y border-gray-100 text-[10px] uppercase tracking-wider text-gray-400"><th className="px-6 py-2.5 font-medium">Пациент</th><th className="px-6 py-2.5 font-medium">Врач</th><th className="px-6 py-2.5 font-medium">Услуга</th><th className="px-6 py-2.5 font-medium">Дата / Время</th><th className="px-6 py-2.5 font-medium">Статус</th></tr></thead>
+            <thead><tr className="border-y border-border text-[10px] uppercase tracking-wider text-muted-foreground"><th className="px-6 py-2.5 font-medium">Пациент</th><th className="px-6 py-2.5 font-medium">Врач</th><th className="px-6 py-2.5 font-medium">Услуга</th><th className="px-6 py-2.5 font-medium">Дата / Время</th><th className="px-6 py-2.5 font-medium">Статус</th></tr></thead>
             <tbody>
               {recentBookings.map((b) => (
-                <tr key={b.id} className="dash-table-row border-b border-gray-50 last:border-0 transition-colors hover:bg-gray-50/50">
-                  <td className="px-6 py-3.5"><div className="font-medium text-gray-900">{b.patientName}</div><div className="text-[11px] text-gray-400">{b.phone}</div></td>
-                  <td className="px-6 py-3.5 text-gray-600">{b.doctor.name.split(" ").slice(0, 2).join(" ")}</td>
-                  <td className="px-6 py-3.5 text-gray-600">{b.service.name}</td>
-                  <td className="px-6 py-3.5 text-gray-600">{new Date(b.date).toLocaleDateString("ru-RU")} <span className="text-gray-400">{b.time}</span></td>
+                <tr key={b.id} className="dash-table-row border-b border-border/50 last:border-0 transition-colors hover:bg-accent/50">
+                  <td className="px-6 py-3.5"><div className="font-medium text-foreground">{b.patientName}</div><div className="text-[11px] text-muted-foreground">{b.phone}</div></td>
+                  <td className="px-6 py-3.5 text-muted-foreground">{b.doctor.name.split(" ").slice(0, 2).join(" ")}</td>
+                  <td className="px-6 py-3.5 text-muted-foreground">{b.service.name}</td>
+                  <td className="px-6 py-3.5 text-muted-foreground">{new Date(b.date).toLocaleDateString("ru-RU")} <span className="text-muted-foreground/60">{b.time}</span></td>
                   <td className="px-6 py-3.5"><span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold" style={{ backgroundColor: (STATUS_COLORS[b.status] || "#999") + "15", color: STATUS_COLORS[b.status] || "#666" }}><span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: STATUS_COLORS[b.status] || "#666" }} />{STATUS_LABELS[b.status] || b.status}</span></td>
                 </tr>
               ))}
             </tbody>
           </table>
-        ) : <div className="px-6 pb-6 text-sm text-gray-300">Записей пока нет</div>}
+        ) : <div className="px-6 pb-6 text-sm text-muted-foreground/50">Записей пока нет</div>}
       </div>
     </div>
   );
