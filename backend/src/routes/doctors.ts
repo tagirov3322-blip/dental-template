@@ -28,16 +28,19 @@ router.get("/:id", asyncHandler(async (req: Request, res: Response) => {
 
 router.post("/", requireAdmin, validate(createDoctorSchema), asyncHandler(async (req: Request, res: Response) => {
   const doctor = await prisma.doctor.create({ data: sanitizeObject(req.body) });
+  cacheInvalidate("doctors:");
   res.status(201).json(doctor);
 }));
 
 router.put("/:id", requireAdmin, validate(updateDoctorSchema), asyncHandler(async (req: Request, res: Response) => {
   const doctor = await prisma.doctor.update({ where: { id: Number(req.params.id) }, data: sanitizeObject(req.body) });
+  cacheInvalidate("doctors:");
   res.json(doctor);
 }));
 
 router.delete("/:id", requireAdmin, asyncHandler(async (req: Request, res: Response) => {
   await prisma.doctor.delete({ where: { id: Number(req.params.id) } });
+  cacheInvalidate("doctors:");
   res.json({ message: "Врач удалён" });
 }));
 
