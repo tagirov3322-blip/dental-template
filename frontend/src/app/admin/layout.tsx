@@ -10,6 +10,7 @@ import SSEToast from "@/components/admin/SSEToast";
 const NAV = [
   { href: "/admin/bookings", label: "Записи", icon: "📋" },
   { href: "/admin/doctors", label: "Врачи", icon: "👨‍⚕️" },
+  { href: "/admin/schedule", label: "График", icon: "📅" },
   { href: "/admin/services", label: "Услуги", icon: "🦷" },
   { href: "/admin/reviews", label: "Отзывы", icon: "⭐" },
   { href: "/admin/promotions", label: "Акции", icon: "🎉" },
