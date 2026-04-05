@@ -25,11 +25,12 @@ function Tooth({ onReady }: { onReady?: () => void }) {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
         if (mesh.material instanceof THREE.MeshStandardMaterial) {
-          mesh.material = mesh.material.clone();
-          mesh.material.roughness = 0.15;
-          mesh.material.metalness = 0.05;
-          mesh.material.envMapIntensity = 1.8;
-          mesh.material.needsUpdate = true;
+          const mat = mesh.material.clone();
+          mat.roughness = 0.15;
+          mat.metalness = 0.05;
+          mat.envMapIntensity = 1.8;
+          mat.needsUpdate = true;
+          mesh.material = mat;
         }
       }
     });
