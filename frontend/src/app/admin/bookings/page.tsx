@@ -52,7 +52,7 @@ for (let h = 8; h <= 20; h++) {
 
 function Skeleton() {
   return (
-    <div className="overflow-hidden rounded-2xl bg-card shadow-sm">
+    <div className="overflow-x-auto rounded-2xl bg-card shadow-sm">
       <div className="border-b border-border px-5 py-3"><div className="flex gap-8">{[1,2,3,4,5,6].map(i => <div key={i} className="h-3 w-20 animate-pulse rounded bg-muted" />)}</div></div>
       {[1,2,3,4,5].map(i => <div key={i} className="flex items-center gap-8 border-b border-border/50 px-5 py-4"><div className="h-4 w-28 animate-pulse rounded bg-muted" /><div className="h-3 w-24 animate-pulse rounded bg-muted/60" /><div className="h-3 w-20 animate-pulse rounded bg-muted/60" /><div className="h-3 w-32 animate-pulse rounded bg-muted/60" /><div className="h-3 w-20 animate-pulse rounded bg-muted/60" /><div className="h-5 w-24 animate-pulse rounded-full bg-muted" /></div>)}
     </div>
@@ -171,7 +171,7 @@ export default function AdminBookings() {
 
       <div className="mt-6">
         {loading ? <Skeleton /> : (
-          <div ref={tableRef} className="overflow-hidden rounded-2xl bg-card shadow-sm">
+          <div ref={tableRef} className="overflow-x-auto rounded-2xl bg-card shadow-sm">
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-border text-xs uppercase tracking-wider text-muted-foreground">
