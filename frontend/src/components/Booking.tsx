@@ -81,7 +81,7 @@ export default function Booking() {
     // Только консультация (бесплатно)
     api.get<ApiService[]>("/services").then((data) => {
       const allowed = data.filter((s) => /консультация/i.test(s.name));
-      setServiceCategories(allowed.map((s) => ({ id: String(s.id), name: `${s.name} (бесплатно)` })));
+      setServiceCategories(allowed.map((s) => ({ id: String(s.id), name: "Консультация (бесплатно)" })));
     }).catch(console.error);
   }, []);
 
