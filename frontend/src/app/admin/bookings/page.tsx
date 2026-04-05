@@ -31,10 +31,10 @@ interface BookingsResponse {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  new: "bg-amber-100 text-amber-800",
-  confirmed: "bg-blue-100 text-blue-800",
-  completed: "bg-green-100 text-green-800",
-  cancelled: "bg-red-100 text-red-800",
+  new: "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-400",
+  confirmed: "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-400",
+  completed: "bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-400",
+  cancelled: "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-400",
 };
 
 const STATUS_LABELS: Record<string, string> = {
@@ -52,9 +52,9 @@ for (let h = 8; h <= 20; h++) {
 
 function Skeleton() {
   return (
-    <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
-      <div className="border-b border-gray-100 px-5 py-3"><div className="flex gap-8">{[1,2,3,4,5,6].map(i => <div key={i} className="h-3 w-20 animate-pulse rounded bg-gray-200" />)}</div></div>
-      {[1,2,3,4,5].map(i => <div key={i} className="flex items-center gap-8 border-b border-gray-50 px-5 py-4"><div className="h-4 w-28 animate-pulse rounded bg-gray-200" /><div className="h-3 w-24 animate-pulse rounded bg-gray-100" /><div className="h-3 w-20 animate-pulse rounded bg-gray-100" /><div className="h-3 w-32 animate-pulse rounded bg-gray-100" /><div className="h-3 w-20 animate-pulse rounded bg-gray-100" /><div className="h-5 w-24 animate-pulse rounded-full bg-gray-200" /></div>)}
+    <div className="overflow-hidden rounded-2xl bg-card shadow-sm">
+      <div className="border-b border-border px-5 py-3"><div className="flex gap-8">{[1,2,3,4,5,6].map(i => <div key={i} className="h-3 w-20 animate-pulse rounded bg-muted" />)}</div></div>
+      {[1,2,3,4,5].map(i => <div key={i} className="flex items-center gap-8 border-b border-border/50 px-5 py-4"><div className="h-4 w-28 animate-pulse rounded bg-muted" /><div className="h-3 w-24 animate-pulse rounded bg-muted/60" /><div className="h-3 w-20 animate-pulse rounded bg-muted/60" /><div className="h-3 w-32 animate-pulse rounded bg-muted/60" /><div className="h-3 w-20 animate-pulse rounded bg-muted/60" /><div className="h-5 w-24 animate-pulse rounded-full bg-muted" /></div>)}
     </div>
   );
 }
@@ -73,7 +73,6 @@ export default function AdminBookings() {
   const loadRef = useRef<() => void>(() => {});
   const tableRef = useRef<HTMLDivElement>(null);
 
-  // Загрузка врачей и услуг для селектов
   useEffect(() => {
     api.get<Doctor[]>("/doctors").then(setDoctors).catch(console.error);
     api.get<Service[]>("/services").then(setServices).catch(console.error);
@@ -156,15 +155,15 @@ export default function AdminBookings() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-[#2a3250]">Записи</h1>
+      <h1 className="text-2xl font-bold text-foreground">Записи</h1>
 
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <input type="text" placeholder="Поиск по имени / телефону" value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-          className="rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-[#2a3250]" />
+          className="rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary" />
         {["", "new", "confirmed", "completed", "cancelled"].map((s) => (
           <button key={s} onClick={() => { setFilter(s); setPage(1); }}
-            className={`rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 ${filter === s ? "bg-[#2a3250] text-white shadow-md" : "bg-white text-gray-600 hover:bg-gray-50"}`}>
+            className={`rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 ${filter === s ? "bg-primary text-primary-foreground shadow-md" : "bg-card text-muted-foreground hover:bg-accent"}`}>
             {s ? STATUS_LABELS[s] : "Все"}
           </button>
         ))}
@@ -172,10 +171,10 @@ export default function AdminBookings() {
 
       <div className="mt-6">
         {loading ? <Skeleton /> : (
-          <div ref={tableRef} className="overflow-hidden rounded-2xl bg-white shadow-sm">
+          <div ref={tableRef} className="overflow-hidden rounded-2xl bg-card shadow-sm">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-gray-100 text-xs uppercase tracking-wider text-gray-500">
+                <tr className="border-b border-border text-xs uppercase tracking-wider text-muted-foreground">
                   <th className="px-5 py-3">Пациент</th>
                   <th className="px-5 py-3">Телефон</th>
                   <th className="px-5 py-3">Врач</th>
@@ -187,12 +186,12 @@ export default function AdminBookings() {
               </thead>
               <tbody>
                 {data?.bookings.map((b) => (
-                  <tr key={b.id} className="booking-row border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
-                    <td className="px-5 py-3 font-medium text-gray-900">{b.patientName}</td>
-                    <td className="px-5 py-3 text-gray-600">{b.phone}</td>
-                    <td className="px-5 py-3 text-gray-600">{b.doctor.name.split(" ").slice(0, 2).join(" ")}</td>
-                    <td className="px-5 py-3 text-gray-600">{b.service.name}</td>
-                    <td className="px-5 py-3 text-gray-600">{new Date(b.date).toLocaleDateString("ru-RU")} {b.time}</td>
+                  <tr key={b.id} className="booking-row border-b border-border/50 hover:bg-accent/50 transition-colors">
+                    <td className="px-5 py-3 font-medium text-foreground">{b.patientName}</td>
+                    <td className="px-5 py-3 text-muted-foreground">{b.phone}</td>
+                    <td className="px-5 py-3 text-muted-foreground">{b.doctor.name.split(" ").slice(0, 2).join(" ")}</td>
+                    <td className="px-5 py-3 text-muted-foreground">{b.service.name}</td>
+                    <td className="px-5 py-3 text-muted-foreground">{new Date(b.date).toLocaleDateString("ru-RU")} {b.time}</td>
                     <td className="px-5 py-3">
                       <span className={`inline-block rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_COLORS[b.status]}`}>
                         {STATUS_LABELS[b.status] || b.status}
@@ -200,23 +199,23 @@ export default function AdminBookings() {
                     </td>
                     <td className="px-5 py-3">
                       <div className="flex gap-1">
-                        <button onClick={() => openEdit(b)} className="rounded-lg bg-gray-50 px-2.5 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors">Изменить</button>
+                        <button onClick={() => openEdit(b)} className="rounded-lg bg-accent px-2.5 py-1 text-xs font-medium text-foreground hover:bg-accent/80 transition-colors">Изменить</button>
                         {b.status === "new" && (
-                          <button onClick={() => changeStatus(b.id, "confirmed")} className="rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100 transition-colors">Подтвердить</button>
+                          <button onClick={() => changeStatus(b.id, "confirmed")} className="rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-400 dark:hover:bg-blue-900 transition-colors">Подтвердить</button>
                         )}
                         {(b.status === "new" || b.status === "confirmed") && (
-                          <button onClick={() => changeStatus(b.id, "completed")} className="rounded-lg bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700 hover:bg-green-100 transition-colors">Завершить</button>
+                          <button onClick={() => changeStatus(b.id, "completed")} className="rounded-lg bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700 hover:bg-green-100 dark:bg-green-950 dark:text-green-400 dark:hover:bg-green-900 transition-colors">Завершить</button>
                         )}
                         {b.status !== "cancelled" && (
-                          <button onClick={() => changeStatus(b.id, "cancelled")} className="rounded-lg bg-red-50 px-2.5 py-1 text-xs font-medium text-red-700 hover:bg-red-100 transition-colors">Отменить</button>
+                          <button onClick={() => changeStatus(b.id, "cancelled")} className="rounded-lg bg-red-50 px-2.5 py-1 text-xs font-medium text-red-700 hover:bg-red-100 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-900 transition-colors">Отменить</button>
                         )}
-                        <button onClick={() => deleteBooking(b.id)} className="rounded-lg bg-gray-50 px-2.5 py-1 text-xs font-medium text-gray-500 hover:bg-gray-100 transition-colors">Удалить</button>
+                        <button onClick={() => deleteBooking(b.id)} className="rounded-lg bg-accent px-2.5 py-1 text-xs font-medium text-muted-foreground hover:bg-accent/80 transition-colors">Удалить</button>
                       </div>
                     </td>
                   </tr>
                 ))}
                 {data?.bookings.length === 0 && (
-                  <tr><td colSpan={7} className="px-5 py-8 text-center text-gray-400">Записей нет</td></tr>
+                  <tr><td colSpan={7} className="px-5 py-8 text-center text-muted-foreground">Записей нет</td></tr>
                 )}
               </tbody>
             </table>
@@ -228,78 +227,77 @@ export default function AdminBookings() {
         <div className="mt-4 flex items-center justify-center gap-2">
           {Array.from({ length: data.totalPages }, (_, i) => (
             <button key={i} onClick={() => setPage(i + 1)}
-              className={`h-9 w-9 rounded-xl text-sm font-medium transition ${page === i + 1 ? "bg-[#2a3250] text-white" : "bg-white text-gray-600 hover:bg-gray-50"}`}>
+              className={`h-9 w-9 rounded-xl text-sm font-medium transition ${page === i + 1 ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground hover:bg-accent"}`}>
               {i + 1}
             </button>
           ))}
         </div>
       )}
 
-      {/* Модалка редактирования */}
       {editing && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onMouseDown={(e) => { if (e.target === e.currentTarget) setEditing(null); }}>
-          <div className="w-full max-w-lg rounded-2xl bg-white p-6">
-            <h2 className="text-lg font-bold text-[#2a3250]">Изменить запись #{editing.id}</h2>
+          <div className="w-full max-w-lg rounded-2xl bg-card p-6">
+            <h2 className="text-lg font-bold text-foreground">Изменить запись #{editing.id}</h2>
 
             <div className="mt-4 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700">Пациент</label>
+                  <label className="mb-1.5 block text-sm font-medium text-foreground">Пациент</label>
                   <input value={editForm.patientName} onChange={(e) => setEditForm({ ...editForm, patientName: e.target.value })}
-                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2a3250]" />
+                    className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary" />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700">Телефон</label>
+                  <label className="mb-1.5 block text-sm font-medium text-foreground">Телефон</label>
                   <input value={editForm.phone} onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2a3250]" />
+                    className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary" />
                 </div>
               </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-gray-700">Врач</label>
+                <label className="mb-1.5 block text-sm font-medium text-foreground">Врач</label>
                 <select value={editForm.doctorId} onChange={(e) => setEditForm({ ...editForm, doctorId: Number(e.target.value) })}
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2a3250]">
+                  className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary">
                   {doctors.map((d) => <option key={d.id} value={d.id}>{d.name} — {d.specialty}</option>)}
                 </select>
               </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-gray-700">Услуга</label>
+                <label className="mb-1.5 block text-sm font-medium text-foreground">Услуга</label>
                 <select value={editForm.serviceId} onChange={(e) => setEditForm({ ...editForm, serviceId: Number(e.target.value) })}
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2a3250]">
+                  className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary">
                   {services.map((s) => <option key={s.id} value={s.id}>{s.name} — {s.price.toLocaleString("ru-RU")} ₽</option>)}
                 </select>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700">Дата</label>
+                  <label className="mb-1.5 block text-sm font-medium text-foreground">Дата</label>
                   <input type="date" value={editForm.date} onChange={(e) => setEditForm({ ...editForm, date: e.target.value })}
-                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2a3250]" />
+                    className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary" />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700">Время</label>
+                  <label className="mb-1.5 block text-sm font-medium text-foreground">Время</label>
                   <select value={editForm.time} onChange={(e) => setEditForm({ ...editForm, time: e.target.value })}
-                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2a3250]">
+                    className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary">
                     {TIMES.map((t) => <option key={t} value={t}>{t}</option>)}
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-gray-700">Комментарий</label>
+                <label className="mb-1.5 block text-sm font-medium text-foreground">Комментарий</label>
                 <textarea value={editForm.comment} onChange={(e) => setEditForm({ ...editForm, comment: e.target.value })}
-                  rows={2} className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2a3250]" />
+                  rows={2} className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary" />
               </div>
             </div>
 
             <div className="mt-5 flex gap-3">
               <button onClick={saveEdit} disabled={saving}
-                className="rounded-xl bg-[#2a3250] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#353d5c] disabled:opacity-50">
+                className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50">
                 {saving ? "Сохранение..." : "Сохранить"}
               </button>
               <button onClick={() => setEditing(null)}
-                className="rounded-xl bg-gray-100 px-5 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-200">Отмена</button>
+                className="rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-foreground hover:bg-accent/80">Отмена</button>
             </div>
           </div>
         </div>
