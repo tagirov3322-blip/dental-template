@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main>
+      <main className="dark:bg-[#0a0f1a]">
         <div
           style={{
             backgroundColor: "#0d1117",
