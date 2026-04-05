@@ -353,6 +353,7 @@ export default function Booking() {
                                 </button>
                               ))}
                             </div>
+                            )}
                             <button
                               type="button"
                               onClick={() => setDateTimeStep("date")}
