@@ -5,10 +5,19 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment } from "@react-three/drei";
 import * as THREE from "three";
 
+// Global mouse position normalized to [-1, 1] — updated from document-level listener
+const globalMouse = { x: 0, y: 0 };
+
+if (typeof window !== "undefined") {
+  window.addEventListener("mousemove", (e) => {
+    globalMouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    globalMouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  }, { passive: true });
+}
+
 function Tooth({ onReady }: { onReady?: () => void }) {
   const { scene: gltfScene } = useGLTF("/models/zub2.glb");
   const groupRef = useRef<THREE.Group>(null);
-  const { pointer } = useThree();
   const readyFired = useRef(false);
 
   const [scene] = useState(() => {
@@ -60,8 +69,8 @@ function Tooth({ onReady }: { onReady?: () => void }) {
     }
 
     const baseX = -0.15;
-    const targetY = pointer.x * 0.4;
-    const targetX = baseX - pointer.y * 0.25;
+    const targetY = globalMouse.x * 0.4;
+    const targetX = baseX - globalMouse.y * 0.25;
     groupRef.current.rotation.y +=
       (targetY - groupRef.current.rotation.y) * 0.07;
     groupRef.current.rotation.x +=
@@ -83,7 +92,7 @@ export default function ToothScene({ onReady }: { onReady?: () => void }) {
       camera={{ position: [0, 0, 6], fov: 45 }}
       gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
       dpr={[1, 1.5]}
-      style={{ pointerEvents: "auto" }}
+      style={{ pointerEvents: "none" }}
       frameloop="always"
     >
       <ambientLight intensity={0.9} />
