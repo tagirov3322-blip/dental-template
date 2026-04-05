@@ -152,7 +152,7 @@ export default function AdminDashboard() {
               <div className="dash-pie h-40 w-40 shrink-0" style={{ transform: pieHovered ? "scale(1.15)" : "scale(1)", transition: "transform 1.2s cubic-bezier(0.22, 1, 0.36, 1)", transformOrigin: "center center", willChange: "transform" }} onMouseEnter={() => setPieHovered(true)} onMouseLeave={() => { setPieHovered(false); setActivePieIndex(-1); }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
-                    <Pie data={statusData} cx="50%" cy="50%" innerRadius={40} outerRadius={65} paddingAngle={3} dataKey="value" stroke="none" activeIndex={activePieIndex >= 0 ? activePieIndex : undefined} activeShape={renderActiveShape} onMouseEnter={(_, i) => setActivePieIndex(i)} onMouseLeave={() => setActivePieIndex(-1)}>
+                    <Pie data={statusData} cx="50%" cy="50%" innerRadius={40} outerRadius={65} paddingAngle={3} dataKey="value" stroke="none" activeShape={renderActiveShape} onMouseEnter={(_, i) => setActivePieIndex(i)} onMouseLeave={() => setActivePieIndex(-1)}>
                       {statusData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} style={{ cursor: "pointer" }} />)}
                     </Pie>
                   </PieChart>
