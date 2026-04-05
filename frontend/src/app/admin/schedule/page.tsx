@@ -101,13 +101,13 @@ export default function AdminSchedule() {
             <button
               key={doc.id}
               onClick={() => selectDoctor(doc)}
-              className={`w-full rounded-xl px-4 py-3 text-left transition-all duration-200 ${
+              className={`w-full rounded-xl px-5 py-5 text-left transition-all duration-200 ${
                 selectedId === doc.id
                   ? "bg-[#2a3250] text-white shadow-md"
                   : "bg-white text-gray-700 hover:bg-gray-50"
               }`}
             >
-              <p className="text-base font-semibold">{doc.name.split(" ").slice(0, 2).join(" ")}</p>
+              <p className="text-lg font-semibold">{doc.name.split(" ").slice(0, 2).join(" ")}</p>
               <p className={`mt-1 text-sm ${selectedId === doc.id ? "text-white/60" : "text-gray-400"}`}>{doc.specialty}</p>
             </button>
           ))}
