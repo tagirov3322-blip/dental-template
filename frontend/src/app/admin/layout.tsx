@@ -8,12 +8,12 @@ import gsap from "gsap";
 import SSEToast from "@/components/admin/SSEToast";
 
 const NAV = [
-  { href: "/admin", label: "Дашборд", icon: "📊" },
   { href: "/admin/bookings", label: "Записи", icon: "📋" },
   { href: "/admin/doctors", label: "Врачи", icon: "👨‍⚕️" },
   { href: "/admin/services", label: "Услуги", icon: "🦷" },
   { href: "/admin/reviews", label: "Отзывы", icon: "⭐" },
   { href: "/admin/promotions", label: "Акции", icon: "🎉" },
+  { href: "/admin", label: "Дашборд", icon: "📊" },
   { href: "/admin/settings", label: "Настройки", icon: "⚙️" },
 ];
 
