@@ -94,9 +94,9 @@ export default function AdminSchedule() {
       <h1 className="text-2xl font-bold text-[#2a3250]">График работы</h1>
       <p className="mt-1 text-sm text-gray-400">Настройте расписание для каждого врача</p>
 
-      <div className="mt-6 grid grid-cols-3 items-start gap-6">
+      <div className="mt-6 grid grid-cols-3 items-stretch gap-6">
         {/* Список врачей */}
-        <div className="col-span-1 flex flex-col gap-3">
+        <div className="col-span-1 flex flex-col justify-between gap-2">
           {doctors.map((doc) => (
             <button
               key={doc.id}
