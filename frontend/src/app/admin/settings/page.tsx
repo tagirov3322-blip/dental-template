@@ -43,40 +43,40 @@ export default function AdminSettings() {
     setSaving(false);
   };
 
-  if (!settings) return <div className="text-gray-400">Загрузка...</div>;
+  if (!settings) return <div className="text-muted-foreground">Загрузка...</div>;
 
   return (
     <div ref={containerRef}>
-      <h1 className="page-title text-2xl font-bold text-[#2a3250]">Настройки</h1>
+      <h1 className="page-title text-2xl font-bold text-foreground">Настройки</h1>
 
-      <div className="page-content mt-6 max-w-lg space-y-5 rounded-2xl bg-white p-6 shadow-sm">
+      <div className="page-content mt-6 max-w-lg space-y-5 rounded-2xl bg-card p-6 shadow-sm">
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">Название клиники</label>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">Название клиники</label>
           <input value={settings.clinicName} onChange={(e) => setSettings({ ...settings, clinicName: e.target.value })}
-            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2a3250]" />
+            className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary" />
         </div>
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">Телефон</label>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">Телефон</label>
           <input value={settings.phone} onChange={(e) => setSettings({ ...settings, phone: e.target.value })}
-            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2a3250]" />
+            className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary" />
         </div>
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">Адрес</label>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">Адрес</label>
           <input value={settings.address} onChange={(e) => setSettings({ ...settings, address: e.target.value })}
-            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2a3250]" />
+            className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary" />
         </div>
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">Telegram Chat ID</label>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">Telegram Chat ID</label>
           <input value={settings.telegramChatId} onChange={(e) => setSettings({ ...settings, telegramChatId: e.target.value })}
-            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2a3250]" />
+            className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary" />
         </div>
-        <label className="flex items-center gap-2 text-sm">
+        <label className="flex items-center gap-2 text-sm text-foreground">
           <input type="checkbox" checked={settings.smsEnabled} onChange={(e) => setSettings({ ...settings, smsEnabled: e.target.checked })} className="rounded" />
           SMS-уведомления включены
         </label>
 
         <button onClick={save} disabled={saving}
-          className="rounded-xl bg-[#2a3250] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#353d5c] disabled:opacity-50">
+          className="rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-50">
           {saving ? "Сохранение..." : saved ? "Сохранено!" : "Сохранить"}
         </button>
       </div>
