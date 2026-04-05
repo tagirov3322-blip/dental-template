@@ -47,7 +47,7 @@ export default function ToothOverlay() {
       scrollTrigger: {
         trigger: document.documentElement,
         start: "top top",
-        end: "50% top",
+        end: "100% top",
         scrub: 1,
       },
     });
