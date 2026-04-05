@@ -30,16 +30,19 @@ router.get("/:id", asyncHandler(async (req: Request, res: Response) => {
 
 router.post("/", requireAdmin, validate(createServiceSchema), asyncHandler(async (req: Request, res: Response) => {
   const service = await prisma.service.create({ data: sanitizeObject(req.body) });
+  cacheInvalidate("services:");
   res.status(201).json(service);
 }));
 
 router.put("/:id", requireAdmin, validate(updateServiceSchema), asyncHandler(async (req: Request, res: Response) => {
   const service = await prisma.service.update({ where: { id: Number(req.params.id) }, data: sanitizeObject(req.body) });
+  cacheInvalidate("services:");
   res.json(service);
 }));
 
 router.delete("/:id", requireAdmin, asyncHandler(async (req: Request, res: Response) => {
   await prisma.service.delete({ where: { id: Number(req.params.id) } });
+  cacheInvalidate("services:");
   res.json({ message: "Услуга удалена" });
 }));
 
