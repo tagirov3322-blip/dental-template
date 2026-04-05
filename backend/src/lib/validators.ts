@@ -13,7 +13,7 @@ export const refreshSchema = z.object({
 // Booking
 export const createBookingSchema = z.object({
   patientName: z.string().min(2, "Минимум 2 символа").max(100),
-  phone: z.string().regex(/^\+7\d{10}$/, "Формат: +7XXXXXXXXXX"),
+  phone: z.string().regex(/^(\+7|7|8)\d{10}$/, "Введите номер телефона"),
   doctorId: z.number().int().positive(),
   serviceId: z.number().int().positive(),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Формат: YYYY-MM-DD"),
