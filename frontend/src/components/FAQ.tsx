@@ -74,7 +74,7 @@ export default function FAQ() {
   }, { scope: sectionRef });
 
   return (
-    <section ref={sectionRef} id="faq" className="relative bg-background pt-20 pb-24">
+    <section ref={sectionRef} id="faq" className="relative bg-background dark:bg-transparent pt-20 pb-24">
       {/* Subtle accent */}
       <div className="pointer-events-none absolute left-1/2 top-0 h-64 w-64 -translate-x-1/2 rounded-full bg-primary/4 blur-3xl" aria-hidden="true" />
 
