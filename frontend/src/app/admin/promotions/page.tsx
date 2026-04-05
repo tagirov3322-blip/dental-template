@@ -94,11 +94,11 @@ export default function AdminPromotions() {
           <div className="w-full max-w-md rounded-2xl bg-white p-6">
             <h2 className="text-lg font-bold text-[#2a3250]">{editing.id ? "Редактирование" : "Новая акция"}</h2>
             <div className="mt-4 space-y-3">
-              <input value={editing.title || ""} onChange={(e) => setEditing({ ...editing, title: e.target.value })} placeholder="Заголовок" className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#2a3250]" />
-              <textarea value={editing.description || ""} onChange={(e) => setEditing({ ...editing, description: e.target.value })} placeholder="Описание" rows={3} className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#2a3250]" />
+              <input value={editing.title || ""} onChange={(e) => setEditing({ ...editing, title: e.target.value })} placeholder="Заголовок" className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2a3250]" />
+              <textarea value={editing.description || ""} onChange={(e) => setEditing({ ...editing, description: e.target.value })} placeholder="Описание" rows={3} className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2a3250]" />
               <div className="flex gap-3">
-                <input type="date" value={editing.startDate?.slice(0, 10) || ""} onChange={(e) => setEditing({ ...editing, startDate: e.target.value })} className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#2a3250]" />
-                <input type="date" value={editing.endDate?.slice(0, 10) || ""} onChange={(e) => setEditing({ ...editing, endDate: e.target.value })} className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#2a3250]" />
+                <input type="date" value={editing.startDate?.slice(0, 10) || ""} onChange={(e) => setEditing({ ...editing, startDate: e.target.value })} className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2a3250]" />
+                <input type="date" value={editing.endDate?.slice(0, 10) || ""} onChange={(e) => setEditing({ ...editing, endDate: e.target.value })} className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2a3250]" />
               </div>
               <label className="flex items-center gap-2 text-sm">
                 <input type="checkbox" checked={editing.isActive ?? true} onChange={(e) => setEditing({ ...editing, isActive: e.target.checked })} className="rounded" />
