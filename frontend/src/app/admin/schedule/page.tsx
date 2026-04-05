@@ -125,7 +125,7 @@ export default function AdminSchedule() {
                   const s = schedule[day.key];
                   if (!s) return null;
                   return (
-                    <div key={day.key} className={`flex items-center gap-4 rounded-xl px-4 py-3 transition-colors ${s.enabled ? "bg-green-50" : "bg-gray-50"}`}>
+                    <div key={day.key} className={`flex items-center gap-4 rounded-xl px-4 py-4 transition-colors ${s.enabled ? "bg-green-50" : "bg-gray-50"}`}>
                       <button
                         onClick={() => toggleDay(day.key)}
                         className={`h-5 w-5 shrink-0 rounded border-2 transition-colors ${s.enabled ? "border-green-500 bg-green-500" : "border-gray-300 bg-white"}`}
