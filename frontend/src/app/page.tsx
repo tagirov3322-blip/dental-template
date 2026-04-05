@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Footer from "@/components/Footer";
+import ToothOverlay from "@/components/ToothOverlay";
 
 const Services = dynamic(() => import("@/components/Services"));
 const Doctors = dynamic(() => import("@/components/Doctors"));
@@ -18,6 +19,7 @@ export default function Home() {
       <main className="dark:bg-[#0a0f1a] overflow-x-hidden">
         <div className="hero-about-wrapper">
           <Hero />
+          <ToothOverlay />
           <About />
         </div>
         <Services />
