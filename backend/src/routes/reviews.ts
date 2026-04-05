@@ -36,7 +36,7 @@ router.get("/all", requireAdmin, asyncHandler(async (req: Request, res: Response
   res.json({ reviews, total, page: Number(page), totalPages: Math.ceil(total / Number(limit)) });
 }));
 
-router.post("/", validate(createReviewSchema), asyncHandler(async (req: Request, res: Response) => {
+router.post("/", reviewLimiter, validate(createReviewSchema), asyncHandler(async (req: Request, res: Response) => {
   const data = sanitizeObject(req.body);
   const review = await prisma.review.create({
     data: { authorName: data.authorName as string, text: data.text as string, rating: data.rating as number, source: "site", isApproved: false },
