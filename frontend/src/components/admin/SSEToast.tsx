@@ -28,7 +28,7 @@ export default function SSEToast() {
 
     // Звук только для новых записей
     if (evt.type === "new_booking") {
-      try { new Audio("/notification.wav").play(); } catch {}
+      playNotification();
     }
 
     const data = evt.data || {};
