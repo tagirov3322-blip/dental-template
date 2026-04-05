@@ -53,22 +53,22 @@ export default function AdminSettings() {
         <div>
           <label className="mb-1.5 block text-sm font-medium text-gray-700">Название клиники</label>
           <input value={settings.clinicName} onChange={(e) => setSettings({ ...settings, clinicName: e.target.value })}
-            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#2a3250]" />
+            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2a3250]" />
         </div>
         <div>
           <label className="mb-1.5 block text-sm font-medium text-gray-700">Телефон</label>
           <input value={settings.phone} onChange={(e) => setSettings({ ...settings, phone: e.target.value })}
-            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#2a3250]" />
+            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2a3250]" />
         </div>
         <div>
           <label className="mb-1.5 block text-sm font-medium text-gray-700">Адрес</label>
           <input value={settings.address} onChange={(e) => setSettings({ ...settings, address: e.target.value })}
-            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#2a3250]" />
+            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2a3250]" />
         </div>
         <div>
           <label className="mb-1.5 block text-sm font-medium text-gray-700">Telegram Chat ID</label>
           <input value={settings.telegramChatId} onChange={(e) => setSettings({ ...settings, telegramChatId: e.target.value })}
-            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#2a3250]" />
+            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2a3250]" />
         </div>
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" checked={settings.smsEnabled} onChange={(e) => setSettings({ ...settings, smsEnabled: e.target.checked })} className="rounded" />
