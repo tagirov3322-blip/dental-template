@@ -111,7 +111,7 @@ export default function Booking() {
     const errs: FormErrors = {};
     if (!patientName.trim()) errs.patientName = "Введите имя пациента";
     if (!phone.trim()) errs.phone = "Введите номер телефона";
-    else if (!validatePhone(phone)) errs.phone = "Формат: +7XXXXXXXXXX (11 цифр)";
+    else if (!validatePhone(phone)) errs.phone = "Введите номер: +7, 7 или 8 и 10 цифр";
     if (!doctorId) errs.doctorId = "Выберите врача";
     if (!serviceId) errs.serviceId = "Выберите услугу";
     if (!date) errs.date = "Выберите дату";
