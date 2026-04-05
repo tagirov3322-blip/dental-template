@@ -178,9 +178,9 @@ export default function Reviews() {
         </div>
 
         <div className="flex justify-center gap-6 max-h-[740px] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)]">
-          <TestimonialsColumn testimonials={firstColumn} pixelsPerSecond={18} />
-          <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" pixelsPerSecond={15} />
-          <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" pixelsPerSecond={20} />
+          <TestimonialsColumn testimonials={firstColumn} speed={30} />
+          <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" speed={25} />
+          <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" speed={35} />
         </div>
 
         <div className="reviews-form mx-auto mt-[var(--space-xl)] max-w-2xl liquid-glass-dark rounded-2xl p-8">
