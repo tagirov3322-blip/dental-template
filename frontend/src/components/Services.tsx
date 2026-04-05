@@ -351,7 +351,7 @@ export default function Services() {
                     isExpanded && "bg-card/60"
                   )}
                 >
-                  <span className="flex-1 text-xl font-medium text-foreground">
+                  <span className="flex-1 text-sm sm:text-xl font-medium text-foreground">
                     {service.name}
                   </span>
 
