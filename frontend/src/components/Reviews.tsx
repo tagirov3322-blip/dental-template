@@ -67,21 +67,29 @@ function getInitials(name: string) {
 
 function TestimonialsColumn({ testimonials, className, pixelsPerSecond = 20 }: { testimonials: Review[]; className?: string; pixelsPerSecond?: number }) {
   const columnRef = useRef<HTMLDivElement>(null);
+  const [animDuration, setAnimDuration] = useState(30);
 
-  useGSAP(() => {
+  useEffect(() => {
     if (!columnRef.current) return;
+    // Считаем высоту одного набора карточек
     const height = columnRef.current.scrollHeight / 2;
-    const duration = height / pixelsPerSecond;
-    gsap.to(columnRef.current, { y: "-50%", duration, repeat: -1, ease: "none" });
-  }, { scope: columnRef, dependencies: [testimonials] });
+    setAnimDuration(height / pixelsPerSecond);
+  }, [testimonials, pixelsPerSecond]);
 
   return (
     <div className={cn("overflow-hidden", className)}>
-      <div ref={columnRef} className="flex flex-col gap-6 pb-6">
-        {[...new Array(2)].map((_, index) => (
+      <div
+        ref={columnRef}
+        className="flex flex-col gap-6 pb-6"
+        style={{
+          animation: `scroll-up ${animDuration}s linear infinite`,
+          willChange: "transform",
+        }}
+      >
+        {[0, 1].map((index) => (
           <React.Fragment key={index}>
             {testimonials.map((review) => (
-              <div key={`${index}-${review.id}`} className="liquid-glass-dark w-full max-w-xs rounded-2xl p-6">
+              <div key={`${index}-${review.id}`} className="liquid-glass-dark w-full max-w-xs rounded-2xl p-6 mb-6 last:mb-0">
                 <StarRating rating={review.rating} />
                 <p className="mt-4 text-sm leading-relaxed text-white/70">{review.text}</p>
                 <div className="mt-5 flex items-center gap-3">
