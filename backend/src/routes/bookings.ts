@@ -38,6 +38,28 @@ function isWithinSchedule(
   return { ok: true };
 }
 
+// GET /api/bookings/slots?doctorId=1&date=2026-04-07 — публичный, занятые слоты
+router.get("/slots", asyncHandler(async (req: Request, res: Response) => {
+  const { doctorId, date } = req.query;
+  if (!doctorId || !date) { res.status(400).json({ error: "doctorId и date обязательны" }); return; }
+
+  const bookings = await prisma.booking.findMany({
+    where: {
+      doctorId: Number(doctorId),
+      date: new Date(date as string),
+      status: { in: ["new", "confirmed"] },
+    },
+    include: { service: true },
+  });
+
+  const occupied = bookings.map((b) => ({
+    time: b.time,
+    duration: b.service.duration,
+  }));
+
+  res.json({ occupied });
+}));
+
 // GET /api/bookings — admin
 router.get("/", requireAdmin, asyncHandler(async (req: Request, res: Response) => {
   const { status, doctorId, page = "1", limit = "20", search } = req.query;
