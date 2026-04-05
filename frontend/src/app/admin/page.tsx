@@ -130,7 +130,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="dash-card col-span-5 rounded-2xl bg-card p-6 shadow-sm">
+        <div className="dash-card rounded-2xl bg-card p-5 shadow-sm sm:p-6 lg:col-span-5">
           <div className="flex items-start justify-between">
             <div>
               <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Записей сегодня</p>
