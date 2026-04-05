@@ -13,6 +13,7 @@ const ToothScene = dynamic(() => import("./ToothScene"), { ssr: false });
 
 
 export default function Hero() {
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const [sceneReady, setSceneReady] = useState(false);
   const animStarted = useRef(false);
