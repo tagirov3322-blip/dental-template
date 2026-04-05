@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main className="dark:bg-[#0a0f1a]">
+      <main className="dark:bg-[#0a0f1a] overflow-x-hidden">
         <div className="hero-about-wrapper">
           <Hero />
           <About />
