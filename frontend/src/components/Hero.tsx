@@ -74,9 +74,9 @@ export default function Hero() {
       />
 
 
-      {/* ── Subtitle + Title ── */}
+      {/* ── Mobile: centered flex layout ── */}
       <div
-        className="hero-title pointer-events-none absolute inset-x-0 top-[12%] sm:top-[14%] z-[1] flex flex-col items-center select-none px-4"
+        className="hero-title relative z-[1] flex min-h-screen flex-col items-center justify-center px-4 sm:pointer-events-none sm:absolute sm:inset-x-0 sm:top-[14%] sm:min-h-0 sm:flex-col sm:justify-start"
         style={{ opacity: 0, transform: "translateY(30px)", willChange: "transform, opacity" }}
       >
         <span
@@ -99,25 +99,49 @@ export default function Hero() {
         >
           Айкью Дентал
         </h1>
+
+        {/* Buttons — inside flex on mobile, absolute on desktop */}
+        <div className="hero-cta-row mt-10 flex flex-col items-center gap-4 sm:pointer-events-none sm:absolute sm:inset-x-0 sm:bottom-auto sm:mt-0 sm:flex-row sm:justify-between sm:px-[10%] lg:px-[13%]" style={{ position: undefined as unknown as undefined }}>
+        </div>
       </div>
 
-      {/* ── Buttons ── */}
-      <div className="hero-cta-row pointer-events-none absolute inset-x-0 bottom-[22%] sm:bottom-[30%] z-[4] flex flex-col sm:flex-row items-center justify-center gap-4 sm:justify-between px-4 sm:px-[10%] lg:px-[13%] [&_a]:pointer-events-auto">
+      {/* ── Desktop buttons (absolute positioned) ── */}
+      <div className="hero-cta-row pointer-events-none absolute inset-x-0 bottom-[30%] z-[4] hidden sm:flex items-center justify-between px-[10%] lg:px-[13%] [&_a]:pointer-events-auto">
         <a
           href="#booking"
-          className="hero-cta inline-flex h-14 w-full max-w-[280px] items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/5 text-base font-medium tracking-[0.08em] text-white/90 hover:border-white/40 hover:bg-white/10 active:scale-[0.97] sm:h-20 sm:w-[320px] sm:max-w-none sm:text-xl"
+          className="hero-cta inline-flex h-20 w-[320px] items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/5 text-xl font-medium tracking-[0.08em] text-white/90 hover:border-white/40 hover:bg-white/10 active:scale-[0.97]"
           style={{ visibility: "hidden" }}
         >
           Записаться на приём
-          <ArrowRight className="h-5 w-5 sm:h-6 sm:w-6 text-white/70" />
+          <ArrowRight className="h-6 w-6 text-white/70" />
         </a>
         <a
           href="#promotions"
-          className="hero-cta inline-flex h-14 w-full max-w-[280px] items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/5 text-base font-medium tracking-[0.08em] text-white/90 hover:border-white/40 hover:bg-white/10 active:scale-[0.97] sm:h-20 sm:w-[320px] sm:max-w-none sm:text-xl"
+          className="hero-cta inline-flex h-20 w-[320px] items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/5 text-xl font-medium tracking-[0.08em] text-white/90 hover:border-white/40 hover:bg-white/10 active:scale-[0.97]"
           style={{ visibility: "hidden" }}
         >
           К акциям
-          <ArrowRight className="h-5 w-5 sm:h-6 sm:w-6 text-white/70" />
+          <ArrowRight className="h-6 w-6 text-white/70" />
+        </a>
+      </div>
+
+      {/* ── Mobile buttons (inside flow, centered) ── */}
+      <div className="hero-cta-row absolute inset-x-0 bottom-[8%] z-[4] flex flex-col items-center gap-3 px-6 sm:hidden [&_a]:pointer-events-auto">
+        <a
+          href="#booking"
+          className="hero-cta inline-flex h-14 w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 text-base font-medium tracking-[0.08em] text-white/90 active:scale-[0.97]"
+          style={{ visibility: "hidden" }}
+        >
+          Записаться на приём
+          <ArrowRight className="h-5 w-5 text-white/70" />
+        </a>
+        <a
+          href="#promotions"
+          className="hero-cta inline-flex h-14 w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 text-base font-medium tracking-[0.08em] text-white/90 active:scale-[0.97]"
+          style={{ visibility: "hidden" }}
+        >
+          К акциям
+          <ArrowRight className="h-5 w-5 text-white/70" />
         </a>
       </div>
     </section>
