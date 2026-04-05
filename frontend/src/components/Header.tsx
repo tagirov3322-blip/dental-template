@@ -116,7 +116,7 @@ export default function Header() {
             className="h-11 w-auto"
             style={{ filter: "brightness(0) saturate(100%) invert(17%) sepia(14%) saturate(1500%) hue-rotate(190deg) brightness(92%) contrast(92%)" }}
           />
-        </Link>
+        </a>
 
         {/* Desktop nav */}
         <nav className="hidden lg:flex items-center gap-8">
