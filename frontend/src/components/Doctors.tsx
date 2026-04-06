@@ -265,7 +265,10 @@ function DoctorModal({
 
               <a
                 href="#booking"
-                onClick={onClose}
+                onClick={() => {
+                  window.dispatchEvent(new CustomEvent("select-doctor", { detail: { doctorId: doctor.id } }));
+                  onClose();
+                }}
                 className="mt-8 inline-flex h-12 items-center justify-center rounded-xl bg-primary px-8 text-sm font-semibold text-white transition-all hover:bg-[#353d5c] active:scale-[0.98]"
               >
                 Записаться к специалисту

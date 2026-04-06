@@ -138,15 +138,31 @@ export default function AdminBookings() {
     return false;
   };
 
-  const load = useCallback(() => {
-    setLoading(true);
+  const buildParams = useCallback(() => {
     const params = new URLSearchParams();
     params.set("page", String(page));
-    params.set("limit", "15");
-    if (filter) params.set("status", filter);
+    params.set("limit", "50");
+    // For archive filters and active, we fetch all and filter client-side
+    if (filter === "new" || filter === "confirmed") {
+      params.set("status", filter);
+    }
     if (search) params.set("search", search);
+    return params;
+  }, [filter, search, page]);
+
+  const filterBookings = useCallback((bookings: Booking[]) => {
+    if (filter === "archive") return bookings.filter((b) => b.status === "completed" || b.status === "cancelled");
+    if (filter === "archive_completed") return bookings.filter((b) => b.status === "completed");
+    if (filter === "archive_cancelled") return bookings.filter((b) => b.status === "cancelled");
+    if (filter === "") return bookings.filter((b) => b.status === "new" || b.status === "confirmed");
+    return bookings;
+  }, [filter]);
+
+  const load = useCallback(() => {
+    setLoading(true);
+    const params = buildParams();
     api.get<BookingsResponse>(`/bookings?${params}`).then((d) => {
-      setData(d);
+      setData({ ...d, bookings: filterBookings(d.bookings) });
       setLoading(false);
       requestAnimationFrame(() => {
         if (tableRef.current) {
@@ -154,16 +170,14 @@ export default function AdminBookings() {
         }
       });
     }).catch(console.error);
-  }, [filter, search, page]);
+  }, [buildParams, filterBookings]);
 
   const silentLoad = useCallback(() => {
-    const params = new URLSearchParams();
-    params.set("page", String(page));
-    params.set("limit", "15");
-    if (filter) params.set("status", filter);
-    if (search) params.set("search", search);
-    api.get<BookingsResponse>(`/bookings?${params}`).then(setData).catch(console.error);
-  }, [filter, search, page]);
+    const params = buildParams();
+    api.get<BookingsResponse>(`/bookings?${params}`).then((d) => {
+      setData({ ...d, bookings: filterBookings(d.bookings) });
+    }).catch(console.error);
+  }, [buildParams, filterBookings]);
 
   loadRef.current = silentLoad;
 
@@ -252,9 +266,9 @@ export default function AdminBookings() {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-foreground">Записи</h1>
-        <button onClick={openCreate} className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90">
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="text-2xl font-bold text-foreground shrink-0">Записи</h1>
+        <button onClick={openCreate} className="shrink-0 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90">
           + Новая запись
         </button>
       </div>
@@ -263,55 +277,84 @@ export default function AdminBookings() {
         <input type="text" placeholder="Поиск по имени / телефону" value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
           className="rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary" />
-        {["", "new", "confirmed", "completed", "cancelled"].map((s) => (
-          <button key={s} onClick={() => { setFilter(s); setPage(1); }}
-            className={`rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 ${filter === s ? "bg-primary text-primary-foreground shadow-md" : "bg-card text-muted-foreground hover:bg-accent"}`}>
-            {s ? STATUS_LABELS[s] : "Все"}
+        {[
+          { value: "", label: "Активные" },
+          { value: "new", label: "Новые" },
+          { value: "confirmed", label: "Подтверждённые" },
+          { value: "archive", label: "Архив" },
+        ].map((s) => (
+          <button key={s.value} onClick={() => { setFilter(s.value); setPage(1); }}
+            className={`rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 ${
+              s.value === "archive"
+                ? (filter === "archive" || filter === "archive_completed" || filter === "archive_cancelled")
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "bg-card text-muted-foreground hover:bg-accent"
+                : filter === s.value
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "bg-card text-muted-foreground hover:bg-accent"
+            }`}>
+            {s.label}
           </button>
         ))}
       </div>
 
+      {(filter === "archive" || filter === "archive_completed" || filter === "archive_cancelled") && (
+        <div className="mt-2 flex gap-2">
+          {[
+            { value: "archive", label: "Все" },
+            { value: "archive_completed", label: "Завершённые" },
+            { value: "archive_cancelled", label: "Отменённые" },
+          ].map((s) => (
+            <button key={s.value} onClick={() => { setFilter(s.value); setPage(1); }}
+              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-200 ${filter === s.value ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
+              {s.label}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="mt-6">
         {loading ? <Skeleton /> : (
           <div ref={tableRef} className="overflow-x-auto rounded-2xl bg-card shadow-sm">
-            <table className="w-full text-left text-sm">
+            <table className="min-w-[800px] w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-border text-xs uppercase tracking-wider text-muted-foreground">
-                  <th className="px-5 py-3">Пациент</th>
-                  <th className="px-5 py-3">Телефон</th>
-                  <th className="px-5 py-3">Врач</th>
-                  <th className="px-5 py-3">Услуга</th>
-                  <th className="px-5 py-3">Дата</th>
-                  <th className="px-5 py-3">Статус</th>
-                  <th className="px-5 py-3">Действия</th>
+                  <th className="px-4 py-3">Пациент</th>
+                  <th className="px-4 py-3">Телефон</th>
+                  <th className="px-4 py-3">Врач</th>
+                  <th className="px-4 py-3">Услуга</th>
+                  <th className="px-4 py-3">Дата</th>
+                  <th className="px-4 py-3">Статус</th>
+                  <th className="px-4 py-3">Действия</th>
                 </tr>
               </thead>
               <tbody>
                 {data?.bookings.map((b) => (
                   <tr key={b.id} className="booking-row border-b border-border/50 hover:bg-accent/50 transition-colors">
-                    <td className="px-5 py-3 font-medium text-foreground">{b.patientName}</td>
-                    <td className="px-5 py-3 text-muted-foreground">{b.phone}</td>
-                    <td className="px-5 py-3 text-muted-foreground">{b.doctor.name.split(" ").slice(0, 2).join(" ")}</td>
-                    <td className="px-5 py-3 text-muted-foreground">{b.service.name}</td>
-                    <td className="px-5 py-3 text-muted-foreground">{new Date(b.date).toLocaleDateString("ru-RU")} {b.time}</td>
-                    <td className="px-5 py-3">
+                    <td className="px-4 py-3 font-medium text-foreground whitespace-nowrap">{b.patientName}</td>
+                    <td className="px-4 py-3 text-muted-foreground whitespace-nowrap">{b.phone}</td>
+                    <td className="px-4 py-3 text-muted-foreground whitespace-nowrap">{b.doctor.name.split(" ").slice(0, 2).join(" ")}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{b.service.name}</td>
+                    <td className="px-4 py-3 text-muted-foreground whitespace-nowrap">{new Date(b.date).toLocaleDateString("ru-RU")} {b.time}</td>
+                    <td className="px-4 py-3">
                       <span className={`inline-block rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_COLORS[b.status]}`}>
                         {STATUS_LABELS[b.status] || b.status}
                       </span>
                     </td>
-                    <td className="px-5 py-3">
+                    <td className="px-4 py-3">
                       <div className="flex gap-1">
-                        <button onClick={() => openEdit(b)} className="rounded-lg bg-accent px-2.5 py-1 text-xs font-medium text-foreground hover:bg-accent/80 transition-colors">Изменить</button>
-                        {b.status === "new" && (
-                          <button onClick={() => changeStatus(b.id, "confirmed")} className="rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-400 dark:hover:bg-blue-900 transition-colors">Подтвердить</button>
-                        )}
                         {(b.status === "new" || b.status === "confirmed") && (
-                          <button onClick={() => changeStatus(b.id, "completed")} className="rounded-lg bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700 hover:bg-green-100 dark:bg-green-950 dark:text-green-400 dark:hover:bg-green-900 transition-colors">Завершить</button>
+                          <>
+                            <button onClick={() => openEdit(b)} className="rounded-lg bg-accent px-2.5 py-1 text-xs font-medium text-foreground hover:bg-accent/80 transition-colors">Изменить</button>
+                            {b.status === "new" && (
+                              <button onClick={() => changeStatus(b.id, "confirmed")} className="rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-400 dark:hover:bg-blue-900 transition-colors">Подтвердить</button>
+                            )}
+                            <button onClick={() => changeStatus(b.id, "cancelled")} className="rounded-lg bg-red-50 px-2.5 py-1 text-xs font-medium text-red-700 hover:bg-red-100 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-900 transition-colors">Отменить</button>
+                          </>
                         )}
-                        {b.status !== "cancelled" && (
-                          <button onClick={() => changeStatus(b.id, "cancelled")} className="rounded-lg bg-red-50 px-2.5 py-1 text-xs font-medium text-red-700 hover:bg-red-100 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-900 transition-colors">Отменить</button>
+                        {(b.status === "completed" || b.status === "cancelled") && (
+                          <button onClick={() => deleteBooking(b.id)} className="rounded-lg bg-accent px-2.5 py-1 text-xs font-medium text-muted-foreground hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-950 dark:hover:text-red-400 transition-colors">Удалить</button>
                         )}
-                        <button onClick={() => deleteBooking(b.id)} className="rounded-lg bg-accent px-2.5 py-1 text-xs font-medium text-muted-foreground hover:bg-accent/80 transition-colors">Удалить</button>
                       </div>
                     </td>
                   </tr>
