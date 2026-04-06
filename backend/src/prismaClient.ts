@@ -1,7 +1,8 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
+import type { PrismaClient } from "./generated/prisma/client";
 
-let _prisma: any = null;
+let _prisma: PrismaClient | null = null;
 
 export function initPrisma() {
   if (_prisma) return _prisma;
@@ -30,4 +31,4 @@ const handler: ProxyHandler<object> = {
   },
 };
 
-export default new Proxy({}, handler);
+export default new Proxy({} as PrismaClient, handler) as PrismaClient;
