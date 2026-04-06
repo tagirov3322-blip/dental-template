@@ -58,6 +58,10 @@ export const metadata: Metadata = {
     follow: true,
   },
   manifest: "/manifest.json",
+  icons: {
+    icon: "/logo_art.png",
+    apple: "/logo_art.png",
+  },
   other: {
     "google-site-verification": "",
   },
