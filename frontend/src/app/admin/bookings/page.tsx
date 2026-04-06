@@ -4,10 +4,20 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { api } from "@/lib/api";
 import { onSSE } from "@/lib/sse";
 import { CustomSelect } from "@/components/ui/custom-select";
+import { DatePicker } from "@/components/ui/date-picker";
 import gsap from "gsap";
 
-interface Doctor { id: number; name: string; specialty: string; }
+interface Doctor { id: number; name: string; specialty: string; schedule: Record<string, { start: string; end: string }> | null; }
 interface Service { id: number; name: string; price: number; duration: number; }
+interface OccupiedSlot { time: string; duration: number; }
+interface DayScheduleResponse { available: boolean; schedule: { start: string; end: string } | null; }
+
+const DAY_KEYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+
+function getTodayString(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
 
 interface Booking {
   id: number;
@@ -72,13 +82,61 @@ export default function AdminBookings() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [saving, setSaving] = useState(false);
+  const [availableSlots, setAvailableSlots] = useState<string[]>(TIMES);
+  const [dateAvailCache, setDateAvailCache] = useState<Record<string, boolean>>({});
   const loadRef = useRef<() => void>(() => {});
   const tableRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    api.get<Doctor[]>("/doctors").then(setDoctors).catch(console.error);
+    api.get<Doctor[]>("/doctors?active=false").then(setDoctors).catch(console.error);
     api.get<Service[]>("/services").then(setServices).catch(console.error);
   }, []);
+
+  // Load available time slots when doctor + date change in form
+  useEffect(() => {
+    if (!editForm.doctorId || !editForm.date) { setAvailableSlots(TIMES); return; }
+    Promise.all([
+      api.get<DayScheduleResponse>(`/doctors/${editForm.doctorId}/day-schedule?date=${editForm.date}`),
+      api.get<{ occupied: OccupiedSlot[] }>(`/bookings/slots?doctorId=${editForm.doctorId}&date=${editForm.date}`),
+    ]).then(([dayData, slotsData]) => {
+      if (!dayData.available || !dayData.schedule) { setAvailableSlots([]); return; }
+      const { start, end } = dayData.schedule;
+      const occupiedSet = new Set(slotsData.occupied.map((o) => o.time));
+      const slots = TIMES.filter((t) => t >= start && t < end && !occupiedSet.has(t));
+      setAvailableSlots(slots);
+      if (editForm.time && !slots.includes(editForm.time)) setEditForm((prev) => ({ ...prev, time: slots[0] || "" }));
+    }).catch(() => setAvailableSlots(TIMES));
+  }, [editForm.doctorId, editForm.date]);
+
+  // Pre-load date availability for selected doctor
+  useEffect(() => {
+    if (!editForm.doctorId) { setDateAvailCache({}); return; }
+    const today = new Date();
+    const dates: string[] = [];
+    for (let m = 0; m < 2; m++) {
+      const month = today.getMonth() + m;
+      const year = today.getFullYear() + Math.floor(month / 12);
+      const daysInMonth = new Date(year, (month % 12) + 1, 0).getDate();
+      for (let d = 1; d <= daysInMonth; d++) {
+        dates.push(`${year}-${String((month % 12) + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`);
+      }
+    }
+    Promise.all(dates.map(async (dateStr) => {
+      try {
+        const data = await api.get<DayScheduleResponse>(`/doctors/${editForm.doctorId}/day-schedule?date=${dateStr}`);
+        return { dateStr, available: data.available };
+      } catch { return { dateStr, available: true }; }
+    })).then((results) => {
+      const cache: Record<string, boolean> = {};
+      results.forEach((r) => { cache[r.dateStr] = r.available; });
+      setDateAvailCache(cache);
+    });
+  }, [editForm.doctorId]);
+
+  const isDateDisabledAdmin = (dateStr: string): boolean => {
+    if (dateStr in dateAvailCache) return !dateAvailCache[dateStr];
+    return false;
+  };
 
   const load = useCallback(() => {
     setLoading(true);
@@ -317,22 +375,36 @@ export default function AdminBookings() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="mb-1.5 block text-sm font-medium text-foreground">Дата</label>
-                  <input type="date" value={editForm.date} onChange={(e) => setEditForm({ ...editForm, date: e.target.value })}
-                    className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary" />
-                </div>
-                <div>
-                  <label className="mb-1.5 block text-sm font-medium text-foreground">Время</label>
-                  <CustomSelect
-                    value={editForm.time}
-                    onChange={(v) => setEditForm({ ...editForm, time: v })}
-                    placeholder="Время"
-                    options={TIMES.map((t) => ({ value: t, label: t }))}
-                  />
-                </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-foreground">Дата</label>
+                <DatePicker
+                  value={editForm.date}
+                  onChange={(v) => setEditForm({ ...editForm, date: v, time: "" })}
+                  min={getTodayString()}
+                  inline
+                  isDateDisabled={isDateDisabledAdmin}
+                />
               </div>
+
+              {editForm.date && (
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-foreground">
+                    Время — {new Date(editForm.date).toLocaleDateString("ru-RU", { day: "numeric", month: "long" })}
+                  </label>
+                  {availableSlots.length === 0 ? (
+                    <p className="py-3 text-sm text-red-500">Врач не принимает в этот день</p>
+                  ) : (
+                    <div className="grid grid-cols-4 gap-2 sm:grid-cols-5">
+                      {availableSlots.map((slot) => (
+                        <button key={slot} type="button" onClick={() => setEditForm({ ...editForm, time: slot })}
+                          className={`rounded-lg border px-3 py-2 text-sm transition-colors ${editForm.time === slot ? "border-primary bg-primary text-white" : "border-border hover:border-primary hover:bg-primary/5"}`}>
+                          {slot}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-foreground">Комментарий</label>
@@ -380,22 +452,36 @@ export default function AdminBookings() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="mb-1.5 block text-sm font-medium text-foreground">Дата</label>
-                  <input type="date" value={editForm.date} onChange={(e) => setEditForm({ ...editForm, date: e.target.value })}
-                    className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary" />
-                </div>
-                <div>
-                  <label className="mb-1.5 block text-sm font-medium text-foreground">Время</label>
-                  <CustomSelect
-                    value={editForm.time}
-                    onChange={(v) => setEditForm({ ...editForm, time: v })}
-                    placeholder="Время"
-                    options={TIMES.map((t) => ({ value: t, label: t }))}
-                  />
-                </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-foreground">Дата</label>
+                <DatePicker
+                  value={editForm.date}
+                  onChange={(v) => setEditForm({ ...editForm, date: v, time: "" })}
+                  min={getTodayString()}
+                  inline
+                  isDateDisabled={isDateDisabledAdmin}
+                />
               </div>
+
+              {editForm.date && (
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-foreground">
+                    Время — {new Date(editForm.date).toLocaleDateString("ru-RU", { day: "numeric", month: "long" })}
+                  </label>
+                  {availableSlots.length === 0 ? (
+                    <p className="py-3 text-sm text-red-500">Врач не принимает в этот день</p>
+                  ) : (
+                    <div className="grid grid-cols-4 gap-2 sm:grid-cols-5">
+                      {availableSlots.map((slot) => (
+                        <button key={slot} type="button" onClick={() => setEditForm({ ...editForm, time: slot })}
+                          className={`rounded-lg border px-3 py-2 text-sm transition-colors ${editForm.time === slot ? "border-primary bg-primary text-white" : "border-border hover:border-primary hover:bg-primary/5"}`}>
+                          {slot}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
