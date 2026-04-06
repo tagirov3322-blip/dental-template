@@ -61,8 +61,22 @@ router.get("/slots", asyncHandler(async (req: Request, res: Response) => {
   res.json({ occupied });
 }));
 
+// Auto-complete past bookings
+async function autoCompletePastBookings() {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  await prisma.booking.updateMany({
+    where: {
+      status: { in: ["new", "confirmed"] },
+      date: { lt: today },
+    },
+    data: { status: "completed" },
+  });
+}
+
 // GET /api/bookings — admin
 router.get("/", requireAdmin, asyncHandler(async (req: Request, res: Response) => {
+  await autoCompletePastBookings();
   const { status, doctorId, page = "1", limit = "20", search } = req.query;
 
   const where: Record<string, unknown> = {};
