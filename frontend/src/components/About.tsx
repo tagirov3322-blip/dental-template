@@ -125,7 +125,7 @@ export default function About() {
               style={{ opacity: 0, transform: "translateY(30px)" }}
             >
               Клиника{" "}
-              <span className="font-semibold text-white">IQ&nbsp;Dental</span>{" "}
+              <span className="font-semibold text-white">Айкью&nbsp;Дентал</span>{" "}
               переехала по новому адресу —{" "}
               <span className="font-medium text-white">просп.&nbsp;Мира,&nbsp;34</span>.
               Мы создали пространство, где передовые технологии сочетаются
