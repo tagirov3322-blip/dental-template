@@ -13,7 +13,7 @@
     "sourceMap": true,
     "declaration": true
   },
-  "exclude": ["prisma.config.ts"],
+  "exclude": ["prisma.config.ts", "src/seed.ts"],
   "ts-node": {
     "transpileOnly": true,
     "files": true
