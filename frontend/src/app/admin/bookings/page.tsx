@@ -299,18 +299,22 @@ export default function AdminBookings() {
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-foreground">Врач</label>
-                <select value={editForm.doctorId} onChange={(e) => setEditForm({ ...editForm, doctorId: Number(e.target.value) })}
-                  className="w-full rounded-xl border border-border bg-background px-4 pr-10 py-2.5 text-sm text-foreground outline-none focus:border-primary">
-                  {doctors.map((d) => <option key={d.id} value={d.id}>{d.name} — {d.specialty}</option>)}
-                </select>
+                <CustomSelect
+                  value={String(editForm.doctorId)}
+                  onChange={(v) => setEditForm({ ...editForm, doctorId: Number(v) })}
+                  placeholder="Выберите врача"
+                  options={doctors.map((d) => ({ value: String(d.id), label: `${d.name} — ${d.specialty}` }))}
+                />
               </div>
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-foreground">Услуга</label>
-                <select value={editForm.serviceId} onChange={(e) => setEditForm({ ...editForm, serviceId: Number(e.target.value) })}
-                  className="w-full rounded-xl border border-border bg-background px-4 pr-10 py-2.5 text-sm text-foreground outline-none focus:border-primary">
-                  {services.map((s) => <option key={s.id} value={s.id}>{s.name} — {s.price.toLocaleString("ru-RU")} ₽</option>)}
-                </select>
+                <CustomSelect
+                  value={String(editForm.serviceId)}
+                  onChange={(v) => setEditForm({ ...editForm, serviceId: Number(v) })}
+                  placeholder="Выберите услугу"
+                  options={services.map((s) => ({ value: String(s.id), label: `${s.name} — ${s.price.toLocaleString("ru-RU")} ₽` }))}
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -321,10 +325,12 @@ export default function AdminBookings() {
                 </div>
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-foreground">Время</label>
-                  <select value={editForm.time} onChange={(e) => setEditForm({ ...editForm, time: e.target.value })}
-                    className="w-full rounded-xl border border-border bg-background px-4 pr-10 py-2.5 text-sm text-foreground outline-none focus:border-primary">
-                    {TIMES.map((t) => <option key={t} value={t}>{t}</option>)}
-                  </select>
+                  <CustomSelect
+                    value={editForm.time}
+                    onChange={(v) => setEditForm({ ...editForm, time: v })}
+                    placeholder="Время"
+                    options={TIMES.map((t) => ({ value: t, label: t }))}
+                  />
                 </div>
               </div>
 
