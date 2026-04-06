@@ -2,6 +2,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
+
 .hero-about-wrapper {
   position: relative;
   background-color: #0d1117;

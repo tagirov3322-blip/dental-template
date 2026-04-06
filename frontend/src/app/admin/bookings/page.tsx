@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { api } from "@/lib/api";
 import { onSSE } from "@/lib/sse";
+import { CustomSelect } from "@/components/ui/custom-select";
 import gsap from "gsap";
 
 interface Doctor { id: number; name: string; specialty: string; }
@@ -66,6 +67,7 @@ export default function AdminBookings() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Booking | null>(null);
+  const [creating, setCreating] = useState(false);
   const [editForm, setEditForm] = useState({ doctorId: 0, serviceId: 0, date: "", time: "", patientName: "", phone: "", comment: "" });
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [services, setServices] = useState<Service[]>([]);
@@ -132,6 +134,43 @@ export default function AdminBookings() {
     });
   };
 
+  const openCreate = () => {
+    setCreating(true);
+    setEditForm({
+      doctorId: doctors[0]?.id || 0,
+      serviceId: services[0]?.id || 0,
+      date: new Date().toISOString().slice(0, 10),
+      time: "09:00",
+      patientName: "",
+      phone: "",
+      comment: "",
+    });
+  };
+
+  const saveCreate = async () => {
+    if (!editForm.patientName.trim() || !editForm.phone.trim()) {
+      alert("Заполните ФИО и телефон");
+      return;
+    }
+    setSaving(true);
+    try {
+      await api.post("/bookings", {
+        doctorId: editForm.doctorId,
+        serviceId: editForm.serviceId,
+        date: editForm.date,
+        time: editForm.time,
+        patientName: editForm.patientName.trim(),
+        phone: editForm.phone.trim(),
+        consentGiven: true,
+      });
+      setCreating(false);
+      silentLoad();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Ошибка создания");
+    }
+    setSaving(false);
+  };
+
   const saveEdit = async () => {
     if (!editing) return;
     setSaving(true);
@@ -155,7 +194,12 @@ export default function AdminBookings() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-foreground">Записи</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-foreground">Записи</h1>
+        <button onClick={openCreate} className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90">
+          + Новая запись
+        </button>
+      </div>
 
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <input type="text" placeholder="Поиск по имени / телефону" value={search}
@@ -256,7 +300,7 @@ export default function AdminBookings() {
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-foreground">Врач</label>
                 <select value={editForm.doctorId} onChange={(e) => setEditForm({ ...editForm, doctorId: Number(e.target.value) })}
-                  className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary">
+                  className="w-full rounded-xl border border-border bg-background px-4 pr-10 py-2.5 text-sm text-foreground outline-none focus:border-primary">
                   {doctors.map((d) => <option key={d.id} value={d.id}>{d.name} — {d.specialty}</option>)}
                 </select>
               </div>
@@ -264,7 +308,7 @@ export default function AdminBookings() {
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-foreground">Услуга</label>
                 <select value={editForm.serviceId} onChange={(e) => setEditForm({ ...editForm, serviceId: Number(e.target.value) })}
-                  className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary">
+                  className="w-full rounded-xl border border-border bg-background px-4 pr-10 py-2.5 text-sm text-foreground outline-none focus:border-primary">
                   {services.map((s) => <option key={s.id} value={s.id}>{s.name} — {s.price.toLocaleString("ru-RU")} ₽</option>)}
                 </select>
               </div>
@@ -278,7 +322,7 @@ export default function AdminBookings() {
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-foreground">Время</label>
                   <select value={editForm.time} onChange={(e) => setEditForm({ ...editForm, time: e.target.value })}
-                    className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary">
+                    className="w-full rounded-xl border border-border bg-background px-4 pr-10 py-2.5 text-sm text-foreground outline-none focus:border-primary">
                     {TIMES.map((t) => <option key={t} value={t}>{t}</option>)}
                   </select>
                 </div>
@@ -297,6 +341,76 @@ export default function AdminBookings() {
                 {saving ? "Сохранение..." : "Сохранить"}
               </button>
               <button onClick={() => setEditing(null)}
+                className="rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-foreground hover:bg-accent/80">Отмена</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {creating && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 overflow-y-auto" onMouseDown={(e) => { if (e.target === e.currentTarget) setCreating(false); }}>
+          <div className="w-full max-w-lg rounded-t-2xl sm:rounded-2xl bg-card p-5 sm:p-6 max-h-[90vh] overflow-y-auto">
+            <h2 className="text-lg font-bold text-foreground">Новая запись</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Запись пациента по звонку</p>
+
+            <div className="mt-4 space-y-4">
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-foreground">Врач</label>
+                <CustomSelect
+                  value={String(editForm.doctorId)}
+                  onChange={(v) => setEditForm({ ...editForm, doctorId: Number(v) })}
+                  placeholder="Выберите врача"
+                  options={doctors.map((d) => ({ value: String(d.id), label: `${d.name} — ${d.specialty}` }))}
+                />
+              </div>
+
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-foreground">Услуга</label>
+                <CustomSelect
+                  value={String(editForm.serviceId)}
+                  onChange={(v) => setEditForm({ ...editForm, serviceId: Number(v) })}
+                  placeholder="Выберите услугу"
+                  options={services.map((s) => ({ value: String(s.id), label: `${s.name} — ${s.price.toLocaleString("ru-RU")} ₽` }))}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-foreground">Дата</label>
+                  <input type="date" value={editForm.date} onChange={(e) => setEditForm({ ...editForm, date: e.target.value })}
+                    className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary" />
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-foreground">Время</label>
+                  <CustomSelect
+                    value={editForm.time}
+                    onChange={(v) => setEditForm({ ...editForm, time: v })}
+                    placeholder="Время"
+                    options={TIMES.map((t) => ({ value: t, label: t }))}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-foreground">ФИО пациента</label>
+                  <input value={editForm.patientName} onChange={(e) => setEditForm({ ...editForm, patientName: e.target.value })} placeholder="Иванов Иван Иванович"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary" />
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-foreground">Телефон</label>
+                  <input value={editForm.phone} onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })} placeholder="+7 (___) ___-__-__"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary" />
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-5 flex gap-3">
+              <button onClick={saveCreate} disabled={saving}
+                className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50">
+                {saving ? "Создание..." : "Записать пациента"}
+              </button>
+              <button onClick={() => setCreating(false)}
                 className="rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-foreground hover:bg-accent/80">Отмена</button>
             </div>
           </div>
