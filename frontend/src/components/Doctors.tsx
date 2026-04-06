@@ -126,7 +126,7 @@ function DoctorCard({
               src={doctor.photo || "/doctors/default.webp"}
               alt={doctor.name}
               loading="lazy"
-              className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-110"
+              className="absolute inset-0 h-full w-full object-cover object-top"
             />
             {/* Subtle overlay on hover */}
             <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
