@@ -27,8 +27,8 @@ export default function Hero() {
 
       tl.fromTo(".hero-cta",
         { y: 25, autoAlpha: 0 },
-        { y: 0, autoAlpha: 1, stagger: 0.1, duration: 1, ease: "power2.out" },
-        0.5,
+        { y: 0, autoAlpha: 1, stagger: 0.1, duration: 0.6, ease: "power2.out" },
+        0.4,
       );
 
       /* ── Parallax on scroll ── */
@@ -124,7 +124,7 @@ export default function Hero() {
       <div className="hero-cta-row pointer-events-none absolute inset-x-0 bottom-[22%] sm:bottom-[20%] md:bottom-[25%] lg:bottom-[30%] z-[4] hidden sm:flex items-center justify-between px-[8%] md:px-[10%] lg:px-[13%] [&_a]:pointer-events-auto">
         <a
           href="#booking"
-          className="hero-cta inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/5 font-medium tracking-[0.08em] text-white/90 hover:border-white/40 hover:bg-white/10 active:scale-[0.97] h-14 w-[240px] text-base md:h-16 md:w-[280px] md:text-lg lg:h-20 lg:w-[320px] lg:text-xl"
+          className="hero-cta inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/5 font-medium tracking-[0.08em] text-white/90 transition-[border-color,background-color,box-shadow] duration-300 hover:border-white/60 hover:bg-white/15 hover:shadow-[0_0_30px_rgba(255,255,255,0.15)] active:scale-[0.97] h-14 w-[240px] text-base md:h-16 md:w-[280px] md:text-lg lg:h-20 lg:w-[320px] lg:text-xl"
           style={{ visibility: "hidden" }}
         >
           Записаться на приём
@@ -132,7 +132,7 @@ export default function Hero() {
         </a>
         <a
           href="#promotions"
-          className="hero-cta inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/5 font-medium tracking-[0.08em] text-white/90 hover:border-white/40 hover:bg-white/10 active:scale-[0.97] h-14 w-[240px] text-base md:h-16 md:w-[280px] md:text-lg lg:h-20 lg:w-[320px] lg:text-xl"
+          className="hero-cta inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/5 font-medium tracking-[0.08em] text-white/90 transition-[border-color,background-color,box-shadow] duration-300 hover:border-white/60 hover:bg-white/15 hover:shadow-[0_0_30px_rgba(255,255,255,0.15)] active:scale-[0.97] h-14 w-[240px] text-base md:h-16 md:w-[280px] md:text-lg lg:h-20 lg:w-[320px] lg:text-xl"
           style={{ visibility: "hidden" }}
         >
           К акциям
