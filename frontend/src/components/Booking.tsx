@@ -132,6 +132,16 @@ export default function Booking() {
     }).catch(console.error);
   }, []);
 
+  // Подписка на событие выбора врача из карточки
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const { doctorId: id } = (e as CustomEvent).detail;
+      if (id) handleDoctorChange(String(id));
+    };
+    window.addEventListener("select-doctor", handler);
+    return () => window.removeEventListener("select-doctor", handler);
+  }, []);
+
   // При смене врача — сбросить дату и время
   const handleDoctorChange = (newDoctorId: string) => {
     setDoctorId(newDoctorId);
