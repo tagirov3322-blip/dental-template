@@ -226,7 +226,7 @@ export default function Services() {
         if (isMobile) {
           gsap.set(el, { display: "none", height: 0, opacity: 0 });
         } else {
-          gsap.to(el, { height: 0, opacity: 0, duration: 0.3, ease: "power2.inOut", force3D: true, onComplete: () => gsap.set(el, { display: "none" }) });
+          gsap.to(el, { height: 0, opacity: 0, duration: 0.3, ease: "power2.inOut", force3D: true, onComplete: () => { gsap.set(el, { display: "none" }); } });
         }
       }
     });
