@@ -129,13 +129,7 @@ export default function Promotions() {
                     до {promo.deadline}
                   </span>
                 ) : <span />}
-                <a
-                  href="#booking"
-                  className="inline-flex h-12 items-center gap-2 rounded-xl bg-white px-7 text-base font-semibold text-[#0d1117] transition-all duration-300 hover:bg-white/90 hover:gap-3 active:scale-[0.97]"
-                >
-                  {promo.cta}
-                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </a>
+                <span />
               </div>
             </div>
           ))}
